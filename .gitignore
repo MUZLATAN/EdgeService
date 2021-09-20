@@ -3,3 +3,5 @@
 .ieda/workspace.xml
 build/*
 cmake-build-debug/*
+.vscode/*
+FLOW/*
