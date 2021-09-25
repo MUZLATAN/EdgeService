@@ -18,46 +18,54 @@ option(WITH_HEAPPROFILE " build with heap profile " OFF)
 option(WITH_GTESTS "build unit test " OFF)
 
 list(
-  APPEND
-  REQUEST_LIBS
-  gflags
-  glog
-  folly
-  fmt
-  # boost_thread
-  event
-  boost_context
-  double-conversion
-  unwind
-  dl
-  iberty
-  lzma # folly
-  pthread # folly depend on pthread, need put it down
-  opencv_core
-  opencv_imgproc
-  opencv_highgui
-  opencv_imgcodecs
-  opencv_videoio
-  opencv_video
-  opencv_calib3d
-  opencv_features2d
+        APPEND
+        REQUEST_LIBS
+        gflags
+        glog
+        folly
+#        fmt
+        # boost_thread
+        event
+        boost_context
+        double-conversion
+        unwind
+        dl
+        iberty
+        lzma # folly
+        pthread # folly depend on pthread, need put it down
+        opencv_core
+        opencv_imgproc
+        opencv_highgui
+        opencv_imgcodecs
+        opencv_videoio
+        opencv_video
+        opencv_calib3d
+        opencv_features2d
 
-  x264
-  z
-  m
-  dl
-  uuid
+        x264
+        z
+        m
+        dl
+        uuid
 )
 
+#include_directories(/usr/local/include/)
+#include_directories(/usr/include /usr/include/opencv4 /usr/include/jsoncpp/)
+#link_directories(/usr/local/lib /usr/lib)
+
+
+set(ALGO_3RDPARTY_PATH /env/platforms/x86_64)
+
 message(STATUS "NOTE: ALGO_3RDPARTY_PATH is: " ${ALGO_3RDPARTY_PATH})
-include_directories(/usr/local/include/)
-include_directories(/usr/include /usr/include/opencv4 /usr/include/jsoncpp/)
-link_directories(/usr/local/lib /usr/lib)
+include_directories(${ALGO_3RDPARTY_PATH}/include/)
+link_directories(${ALGO_3RDPARTY_PATH}/lib
+        ${ALGO_3RDPARTY_PATH}/static
+        ${ALGO_3RDPARTY_PATH}/so )
+
 
 list(APPEND REQUEST_LIBS jsoncpp)
 add_definitions("-D__PLATFORM_X86__")
 
-aux_source_directory(${CMAKE_SOURCE_DIR}/src/recognition/ ALGO_SRC)
 
 
 message(STATUS "NOTE: PLATFORM is: " ${PLATFORM})
@@ -73,9 +81,7 @@ aux_source_directory(${CMAKE_SOURCE_DIR}/src/network ALGO_SRC)
 aux_source_directory(${CMAKE_SOURCE_DIR}/src/node ALGO_SRC)
 aux_source_directory(${CMAKE_SOURCE_DIR}/src/mgr ALGO_SRC)
 aux_source_directory(${CMAKE_SOURCE_DIR}/src/app ALGO_SRC)
-aux_source_directory(${CMAKE_SOURCE_DIR}/src/lib ALGO_SRC)
 
 set(BIN ALGO)
 add_executable(${BIN} ${ALGO_SRC})
 target_link_libraries(${BIN} ${REQUEST_LIBS})
-

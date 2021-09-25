@@ -18,7 +18,7 @@ namespace vision {
 #elif defined __PLATFORM_HISI__
 #define rootPath "/mnt/algo/service/algo/config/"
 #else
-#define rootPath "/home/z/workspace/edge_frame-main/FLOW/config/"
+#define rootPath "/home/nvidia/FLOW/config/"
 #endif
 
 class ConfigPack {

@@ -20,10 +20,6 @@ using namespace std::chrono;
 
 ServiceDaemon::ServiceDaemon(int argc, char** argv) : version_("") {
     LOG(INFO) << "NOTE: ServiceDaemon Start ";
-
-    lastReadyToFlashConfTime_ = 0;
-    nextFlashConfTime_ = 0;
-
     env.init();
 }
 
@@ -50,10 +46,12 @@ LOG(INFO)<<"BuildVideoInput -------------------------------";
     SolutionPipeline::BuildVideoInput();
     SolutionPipeline::StartVideoInput();
     LOG(INFO)<<"BuildVideoInput  end-------------------------------";
-    confPeriod_ = 6 * 60 * 60 * 1000;
 
     int timeClock = 0;
     auto gt = GetGlobalVariable();
+    for (auto it = gt->g_thread.begin(); it != gt->g_thread.end(); it++){
+        it->detach();
+    }
 
     while (true) {
         std::this_thread::sleep_for(std::chrono::seconds(15));
@@ -68,10 +66,6 @@ LOG(INFO)<<"BuildVideoInput -------------------------------";
     }
 }
 
-void ServiceDaemon::updateConf() {
-}
+
 
 ServiceDaemon::~ServiceDaemon() { google::ShutdownGoogleLogging(); }
-
-void ServiceDaemon::updateRecordConf() {
-}

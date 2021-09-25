@@ -21,28 +21,15 @@ void FlowRpcAsynNode::SendToFlowServer(const std::string& limbustype,
     //按照既有的规定这里的datatype 如果不为 -1 这里的data就需要是字符串的json, 
     //如果datatype 为-1 那么这里的数据需要根据实际情况而定
     LOG(INFO)<<"here";
-    if (datatype != -1){
-        
-        kafka_pack["type"] = datatype;
-        kafka_pack["data"] = eventStr;
-        kafka_pack["key"] = gt->client_sn;
-        
-        limbus_datapck["url"] = dataurl;
-        limbus_datapck["body"] = kafka_pack;
-        limbus_datapck["limbustype"] = limbustype;
-    }else{
 
-        LOG(INFO)<<dataurl;
-        if ("MonitorEvent" ==  limbustype|| "TrajectoryEvent" == limbustype ||"LoggerEvent" == limbustype||"kTrackInfoEvent"){
-            Json::Value event;
-            reader.parse(eventStr,event);
-            limbus_datapck["body"] = event;
-        }else{
-            limbus_datapck["body"] = eventStr;
-        }
-        limbus_datapck["url"] = dataurl;
-        limbus_datapck["limbustype"] = limbustype;
-    }
+    LOG(INFO)<<dataurl;
+    Json::Value event;
+    reader.parse(eventStr,event);
+    limbus_datapck["body"] = event;
+    limbus_datapck["url"] = dataurl;
+    limbus_datapck["limbustype"] = limbustype;
+
+
     std::string outputJson = Json::FastWriter().write(limbus_datapck);
     LOG(INFO) <<outputJson;
 

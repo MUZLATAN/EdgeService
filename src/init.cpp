@@ -64,7 +64,6 @@ void EnvironmentInit::initServiceVariable() {
     initDeviceGroupInfo();
 
     // init code version
-    gt->algo_version = ALGO_VERSION;
 
     // todo other sys env
     // init algo face mqtt topic

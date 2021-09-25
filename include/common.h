@@ -5,8 +5,20 @@
 #include <string>
 #include <vector>
 #include <AlgoObject.h>
+#include <memory>
+#include <thread>
+
+#define ALGO_SYS_PATH "sys_path"        // system path
 
 
+// NOTE: storage for node name
+#define ALGO_NODE_MONITOR "MonitorNode"
+#define ALGO_NODE_DETECT "DetectorNode"
+#define ALGO_NODE_DISPATCH "DispatchNode"
+#define ALGO_NODE_RTSP "RtspLoaderNode"
+#define ALGO_NODE_USBCAMERA "UsbDeviceLoaderNode"
+#define ALGO_NODE_LOCALVIDEO "LocalVideoLoaderNode"
+#define ALGO_NODE_FLOWRPC "FlowRpcAsynNode"
 
 
 #ifndef __TYPEDEFINE_ALGO_FRAME__
@@ -93,20 +105,8 @@ typedef BaseFrame AlgoFrame;
 #endif
 
 
-#define ALGO_SYS_PATH "sys_path"        // system path
 
 
-// NOTE: storage for node name
-#define ALGO_NODE_MONITOR "MonitorNode"
-#define ALGO_NODE_DETECT "DetectorNode"
-#define ALGO_NODE_DISPATCH "DispatchNode"
-#define ALGO_NODE_RTSP "RtspLoaderNode"
-#define ALGO_NODE_USBCAMERA "UsbDeviceLoaderNode"
-#define ALGO_NODE_LOCALVIDEO "LocalVideoLoaderNode"
-#define ALGO_NODE_FLOWRPC "FlowRpcAsynNode"
-
-
-#define HEARBEAT_URL ""
 
 namespace algo {
 namespace vision {
@@ -128,19 +128,18 @@ class AlgoData : public AlgoObject{
 
 struct GlobalVariable {
  public:
+
     std::string algo_version = "";
     std::string sys_version = "";
+
     std::string sys_path = "";
     std::string client_sn = "";
     std::string camera_sns = "";    // Maybe multiple
     std::string video_inputs = "";  // Maybe multiple
 
-    // value
-    std::string chunnel_endpoint = "";
-    std::string flowrpc_url = "";
-    bool isDevEnv = false;
-
     bool sys_quit = false;
+
+    std::vector<std::thread> g_thread;
 };
 
 GlobalVariable* GetGlobalVariable(void);
