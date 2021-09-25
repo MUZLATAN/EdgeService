@@ -58,19 +58,21 @@ void RtspLoaderNode::run() {
         if (gt->sys_quit) {
             return;
         }
-        frame_id_++;
-        cnt = output_queue_->Size();
-        std::this_thread::sleep_for(std::chrono::seconds(5*cnt));
-        capture_->read(frame->cvImage);
+                LOG(INFO)<<"RtspNode read from the queue";
 
-        if (frame->cvImage.empty()) {
-            reopenCamera();
-            continue;
-        }
-        frame->setCurrentTime();
-        frame->camera_sn = gt->camera_sns;
-        frame->frame_id = frame_id_;
-        output_queue_->Push(frame, false);
+        // frame_id_++;
+        // cnt = output_queue_->Size();
+        // // std::this_thread::sleep_for(std::chrono::seconds(5*cnt));
+        // capture_->read(frame->cvImage);
+
+        // if (frame->cvImage.empty()) {
+        //     reopenCamera();
+        //     continue;
+        // }
+        // frame->setCurrentTime();
+        // frame->camera_sn = gt->camera_sns;
+        // frame->frame_id = frame_id_;
+        // output_queue_->Push(frame, false);
 
     }
     LOG(INFO) << node_name_ << " exit .......";

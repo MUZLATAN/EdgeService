@@ -31,8 +31,8 @@ class FlowRpcAsynNode : public Node,
 
     void SendToFlowServer(const std::string& limbustype, const std::string& dataurl, const int datatype, const std::string& eventStr);
 
-    virtual void run();
-    virtual void init() { LOG(INFO) << "flow client init"; }
+    void run();
+    void init() { LOG(INFO) << "flow client init"; }
 
  private:
     bool sendMessage(const std::string& data);

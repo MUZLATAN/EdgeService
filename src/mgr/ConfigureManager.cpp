@@ -13,13 +13,8 @@
 namespace algo {
 namespace vision {
 
-#if defined __PLATFORM_ARM__
-#define rootPath "/home/nvidia/FLOW/config/"
-#elif defined __PLATFORM_HISI__
-#define rootPath "/mnt/algo/service/algo/config/"
-#else
-#define rootPath "/home/nvidia/FLOW/config/"
-#endif
+#define rootPath "../config/"
+
 
 class ConfigPack {
  private:

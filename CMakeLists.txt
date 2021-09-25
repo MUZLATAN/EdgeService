@@ -22,16 +22,9 @@ list(
         REQUEST_LIBS
         gflags
         glog
-        folly
-#        fmt
-        # boost_thread
-        event
         boost_context
-        double-conversion
         unwind
-        dl
         iberty
-        lzma # folly
         pthread # folly depend on pthread, need put it down
         opencv_core
         opencv_imgproc
@@ -40,38 +33,25 @@ list(
         opencv_videoio
         opencv_video
         opencv_calib3d
-        opencv_features2d
-
+        jsoncpp
         x264
-        z
-        m
-        dl
-        uuid
 )
 
-#include_directories(/usr/local/include/)
-#include_directories(/usr/include /usr/include/opencv4 /usr/include/jsoncpp/)
-#link_directories(/usr/local/lib /usr/lib)
+include_directories(/usr/local/include/)
+include_directories(/usr/include /usr/include/opencv4 /usr/include/jsoncpp/)
+link_directories(/usr/local/lib /usr/lib)
 
+# set(ALGO_3RDPARTY_PATH /env/platforms/x86_64)
 
-set(ALGO_3RDPARTY_PATH /env/platforms/x86_64)
+# message(STATUS "NOTE: ALGO_3RDPARTY_PATH is: " ${ALGO_3RDPARTY_PATH})
+# include_directories(${ALGO_3RDPARTY_PATH}/include/)
+# link_directories(${ALGO_3RDPARTY_PATH}/lib
+#         ${ALGO_3RDPARTY_PATH}/static
+#         ${ALGO_3RDPARTY_PATH}/so )
 
-message(STATUS "NOTE: ALGO_3RDPARTY_PATH is: " ${ALGO_3RDPARTY_PATH})
-include_directories(${ALGO_3RDPARTY_PATH}/include/)
-link_directories(${ALGO_3RDPARTY_PATH}/lib
-        ${ALGO_3RDPARTY_PATH}/static
-        ${ALGO_3RDPARTY_PATH}/so )
-
-
-list(APPEND REQUEST_LIBS jsoncpp)
 add_definitions("-D__PLATFORM_X86__")
 
-
-
 message(STATUS "NOTE: PLATFORM is: " ${PLATFORM})
-
-
-
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 

@@ -59,45 +59,44 @@ void DetectorNode::labelBox(cv::Mat& rgbImage,
 }
 
 void DetectorNode::run() {
-    QueuePtr stream_queue;
-    bool algo_door = ConfigureManager::instance()->getAsInt("algo_door");
-
-
     while (true) {
         if (gt->sys_quit) {
             break;
         }
 
-        std::shared_ptr<algo::vision::AlgoObject> context;
-        if (input_queue_->Empty()){
-            std::this_thread::sleep_for(std::chrono::seconds(5));
-            continue;
-        }
-	    input_queue_->Pop(context);
-	    std::shared_ptr<AlgoFrame> frame =
-	            std::dynamic_pointer_cast<algo::core::AlgoFrame>(context);
+        LOG(INFO)<<"here detects";
 
-        if (frame->cvImage.empty()) {
-            LOG(INFO) << " queue size: " << input_queue_->Size();
-            std::this_thread::sleep_for(std::chrono::seconds(2));
-            continue;
-        }
+        // std::shared_ptr<algo::vision::AlgoObject> context;
+        // if (input_queue_->Empty()){
+        //     std::this_thread::sleep_for(std::chrono::seconds(5));
+        //     continue;
+        // }
+        // LOG(INFO)<<"DetectNode read from the queue";
+	    // input_queue_->Pop(context);
+	    // std::shared_ptr<AlgoFrame> frame =
+	    //         std::dynamic_pointer_cast<algo::core::AlgoFrame>(context);
+
+        // if (frame->cvImage.empty()) {
+        //     LOG(INFO) << " queue size: " << input_queue_->Size();
+        //     std::this_thread::sleep_for(std::chrono::seconds(2));
+        //     continue;
+        // }
 
 
-        std::vector<Box> object_boxes;
-        int64_t cur_time = getCurrentTime();
-        // algo::core::sdk::detect(frame, object_boxes);
-        std::this_thread::sleep_for(std::chrono::seconds(5));
-        int64_t duration = getCurrentTime() - cur_time;
+        // std::vector<Box> object_boxes;
+        // int64_t cur_time = getCurrentTime();
+        // // algo::sdk::detect(frame, object_boxes);
+        // std::this_thread::sleep_for(std::chrono::seconds(5));
+        // int64_t duration = getCurrentTime() - cur_time;
 
-        std::shared_ptr<Event> ent = std::make_shared<LoggerEvent>(
-                frame->camera_sn, frame->camera_time);
-        output_queue_->Push(ent);
-        LOG(INFO)<<"push logger event";
+        // std::shared_ptr<Event> ent = std::make_shared<LoggerEvent>(
+        //         frame->camera_sn, frame->camera_time);
+        // output_queue_->Push(ent);
+        // LOG(INFO)<<"push logger event";
 
-        //
-        std::shared_ptr<AlgoData>data = std::make_shared<AlgoData>(object_boxes, frame);
-        for (auto& kv : next_node_unit_) kv.second->Push(data);
+        // LOG(INFO)<<"DispatchNode push queue";
+        // std::shared_ptr<AlgoData>data = std::make_shared<AlgoData>(object_boxes, frame);
+        // for (auto& kv : next_node_unit_) kv.second->Push(data);
     }
     LOG(INFO) << node_name_ << " exit .......";
 }

@@ -69,10 +69,10 @@ void FlowRpcAsynNode::run() {
     //m_queue 为空 就向里面塞数据
     //fail_queue 数据过多, 存入磁盘
     //注意内存对齐  暂时未做
-    std::thread t1([&](){
-        MoveData();
-    });
-    t1.detach();
+    // std::thread t1([&](){
+    //     MoveData();
+    // });
+    // t1.detach();
 
     std::unique_lock<std::mutex> m_qlock(m_qmutex, std::defer_lock);
     std::unique_lock<std::mutex> m_fqlock(m_fqmutex, std::defer_lock);
@@ -93,6 +93,8 @@ void FlowRpcAsynNode::run() {
         //     SetTime();
         // }
         //不断取数据
+        LOG(INFO)<<"flow rpc";
+        /*
         if (m_queue.empty()){
             std::this_thread::sleep_for(std::chrono::seconds(5));
             continue;
@@ -149,7 +151,7 @@ void FlowRpcAsynNode::run() {
             m_fqlock.unlock();
         }
 
-        
+        */
         
     }
 }
