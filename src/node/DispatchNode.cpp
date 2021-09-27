@@ -20,17 +20,15 @@ void DispatchNode::run() {
         if (gt->sys_quit) {
             break;
         }
-        LOG(INFO)<<"dispatch here";
-        // std::shared_ptr<algo::vision::AlgoObject> message;
-	    // //todo tmp debug code
-        // if (input_queue_->Empty()) {
-        //     std::this_thread::sleep_for(std::chrono::seconds(5));
-        //     continue;
-        // }
-	    // input_queue_->Pop(message);
-	    // std::shared_ptr<Event> event =
-	    //         std::dynamic_pointer_cast<Event>(message);
-        // dispatch(event);
+
+         std::shared_ptr<algo::vision::AlgoObject> message;
+         if (input_queue_->Empty()) {
+             std::this_thread::sleep_for(std::chrono::milliseconds(500));
+             continue;
+         }
+	     input_queue_->Pop(message);
+	     std::shared_ptr<Event> event = std::dynamic_pointer_cast<Event>(message);
+         dispatch(event);
     }
     LOG(INFO) << node_name_ << " Exit .......";
 }

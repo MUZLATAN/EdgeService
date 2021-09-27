@@ -117,6 +117,7 @@ void SolutionPipeline::BuildVideoInput() {
 
         auto ptr =
             buildNode(data_loader_name, ALGO_NODE_DETECT, *iter);
+        ptr->init();
         global_video_input_executors_[*iter] = ptr;
     }
 }
@@ -139,11 +140,12 @@ void SolutionPipeline::BuildAndStartCoreGlobal() {
         ptr->init();
 
         int idx = GetGlobalVariable()->g_thread.size();
-        GetGlobalVariable()->g_thread.push_back(std::thread([&](){
+        GetGlobalVariable()->g_thread.emplace_back(std::thread([&](){
             LOG(INFO) << ptr->getNodeName() << " start run.";
             return ptr->run();
         }));
         GetGlobalVariable()->g_thread[idx].detach();
+        sleep(1);
     }
 }
 
@@ -164,6 +166,7 @@ void SolutionPipeline::BuildAndStartGlobal() {
         });
         GetGlobalVariable()->g_thread.emplace_back(std::move(t));
         GetGlobalVariable()->g_thread[idx].detach();
+        sleep(1);
 
     }
 
@@ -177,19 +180,13 @@ void SolutionPipeline::BuildAndStartGlobal() {
 void SolutionPipeline::Start() {
     for (auto iter = executors_.begin(); iter != executors_.end(); ++iter) {
         LOG(INFO) << " thread start: " << (*iter)->getNodeName();
-//        folly::via(folly::getCPUExecutor().get()).thenValue([iter](auto&&) {
-//            folly::setThreadName((*iter)->getNodeName());
-//            return (*iter)->run();
-//        });
         int idx = GetGlobalVariable()->g_thread.size();
-
         GetGlobalVariable()->g_thread.push_back(std::thread([&](){
             LOG(INFO) << (*iter)->getNodeName() << " start run.";
             return (*iter)->run();
         }));
         GetGlobalVariable()->g_thread[idx].detach();
-
-
+        sleep(1);
     }
 }
 
@@ -200,22 +197,14 @@ void SolutionPipeline::StartVideoInput() {
          iter != global_video_input_executors_.end(); ++iter) {
         LOG(INFO) << "video input thread start: "
                   << iter->second->getNodeName();
-//        folly::via(folly::getCPUExecutor().get()).thenValue([iter](auto&&) {
-//            iter->second->init();
-//            folly::setThreadName(iter->second->getNodeName());
-//            return iter->second->run();
-//        });
-//        std::thread t();
-//        t.detach();
         int idx = GetGlobalVariable()->g_thread.size();
-
         GetGlobalVariable()->g_thread.push_back(std::thread([&](){
             LOG(INFO) << iter->second->getNodeName() << " start run.";
             return iter->second->run();
         }));
         GetGlobalVariable()->g_thread[idx].detach();
 
-
+        sleep(1);
     }
 }
 }  // namespace vision

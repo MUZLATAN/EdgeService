@@ -24,6 +24,7 @@ list(
         glog
         boost_context
         unwind
+        lzma
         iberty
         pthread # folly depend on pthread, need put it down
         opencv_core
@@ -37,17 +38,17 @@ list(
         x264
 )
 
-include_directories(/usr/local/include/)
-include_directories(/usr/include /usr/include/opencv4 /usr/include/jsoncpp/)
-link_directories(/usr/local/lib /usr/lib)
+#include_directories(/usr/local/include/)
+#include_directories(/usr/include /usr/include/opencv4 /usr/include/jsoncpp/)
+#link_directories(/usr/local/lib /usr/lib)
 
-# set(ALGO_3RDPARTY_PATH /env/platforms/x86_64)
+ set(ALGO_3RDPARTY_PATH /env/platforms/x86_64)
 
-# message(STATUS "NOTE: ALGO_3RDPARTY_PATH is: " ${ALGO_3RDPARTY_PATH})
-# include_directories(${ALGO_3RDPARTY_PATH}/include/)
-# link_directories(${ALGO_3RDPARTY_PATH}/lib
-#         ${ALGO_3RDPARTY_PATH}/static
-#         ${ALGO_3RDPARTY_PATH}/so )
+ message(STATUS "NOTE: ALGO_3RDPARTY_PATH is: " ${ALGO_3RDPARTY_PATH})
+ include_directories(${ALGO_3RDPARTY_PATH}/include/)
+ link_directories(${ALGO_3RDPARTY_PATH}/lib
+         ${ALGO_3RDPARTY_PATH}/static
+         ${ALGO_3RDPARTY_PATH}/so )
 
 add_definitions("-D__PLATFORM_X86__")
 

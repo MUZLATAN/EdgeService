@@ -34,23 +34,25 @@ void MonitorNode::run() {
         if (gt->sys_quit) {
             break;
         }
-        LOG(INFO)<<"MonitorNode read from the queue";
-        // if (input_queue_->Empty()) 
-        //     continue;
-	    // std::shared_ptr<algo::vision::AlgoObject> context;
-	    // input_queue_->Pop(context);
-	    // std::shared_ptr<AlgoData> message =
-	    //         std::dynamic_pointer_cast<AlgoData>(context);
+
+         if (input_queue_->Empty())
+         {
+//             std::this_thread::sleep_for(std::chrono::milliseconds(500));
+             continue;
+         }
+	     std::shared_ptr<algo::vision::AlgoObject> context;
+	     input_queue_->Pop(context);
+	     std::shared_ptr<AlgoData> message =
+	             std::dynamic_pointer_cast<AlgoData>(context);
 	
 
-        // LOG(INFO)<<"sleep 5 mill secs";
-        // std::this_thread::sleep_for(std::chrono::seconds(5));
+         std::this_thread::sleep_for(std::chrono::milliseconds (500));
 
-        // SendMsg(message);
-        // // 手动快速释放内存
-	    // if( message != nullptr && message->frame_ != nullptr ){
-	    //         message->frame_->cvImage.release();
-	    // }
+         SendMsg(message);
+         // 手动快速释放内存
+	     if( message != nullptr && message->frame_ != nullptr ){
+	             message->frame_->cvImage.release();
+	     }
     }
     LOG(INFO) << node_name_ << " exit .......";
 }
