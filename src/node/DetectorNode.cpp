@@ -36,7 +36,7 @@ void DetectorNode::run() {
 
         std::shared_ptr<algo::vision::AlgoObject> context;
         if (input_queue_->Empty()){
-//            std::this_thread::sleep_for(std::chrono::seconds(5));
+            std::this_thread::sleep_for(std::chrono::seconds(5));
             continue;
         }
         input_queue_->Pop(context);
@@ -47,7 +47,7 @@ void DetectorNode::run() {
             std::this_thread::sleep_for(std::chrono::seconds(2));
             continue;
         }
-
+        std::this_thread::sleep_for(std::chrono::seconds(5));
         std::vector<Box> object_boxes;
         std::shared_ptr<Event> ent = std::make_shared<LoggerEvent>(frame->camera_sn, frame->camera_time);
         output_queue_->Push(ent);

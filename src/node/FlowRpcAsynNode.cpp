@@ -2,8 +2,12 @@
 #include "node/FlowRpcAsynNode.h"
 
 #include <fstream>
+#include <exception>
 #include <thread>
-
+#include <fnmatch.h>
+#include <dirent.h>
+#include <time.h>
+#include <sys/timeb.h>
 #include "common.h"
 #include "mgr/ConfigureManager.h"
 #include "network/HttpClient.h"
@@ -46,13 +50,27 @@ void FlowRpcAsynNode::SendToFlowServer(const std::string& limbustype,
 
 
 bool FlowRpcAsynNode::sendMessage(const std::string& data) {
-    if (data.size() == 0) {
-        LOG(INFO) << "NOTE: message size must big than zero";
-        return false;
-    }
-    std::string response;
-    HttpPost("", data, response);
-    return (response == "\"success\"" ? true: false);
+//    if (data.size() == 0) {
+//        LOG(INFO) << "NOTE: message size must big than zero";
+//        return false;
+//    }
+//    std::string response;
+//    HttpPost("", data, response);
+//    return (response == "\"success\"" ? true: false);
+
+//TODO 此处定义网络发送函数
+
+
+    //此处暂时定义模拟发送函数, 模拟成功失败的概率
+    struct timeb timeSeed;
+    std::cout<<"in SendMethod"<<std::endl;
+    ftime(&timeSeed);
+    srand(timeSeed.time * 1000 + timeSeed.millitm);  // milli time
+//    int r = rand() %11;
+//    if (r % 7 == 0)
+//        return true;
+
+    return true;
 
 }
 
@@ -112,7 +130,7 @@ void FlowRpcAsynNode::run() {
                 success_flag=true;
                 break;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(5000));
         }
         
 
@@ -182,7 +200,7 @@ void FlowRpcAsynNode::MoveData() {
 
         if (m_queue.empty() && !success_flag)            
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
 
         if (m_queue.empty()){
@@ -249,39 +267,37 @@ void FlowRpcAsynNode::MoveData() {
 
 
 void FlowRpcAsynNode::LoadFileNames(const std::string& path){
-    // boost::filesystem::path p (path);
-    // try{
-    //     if (exists(p)){
-    //         if (is_regular_file(p))
-    //             return ;
+    std::string pattern = ".data.over";
+    std::vector<std::string> filenames;
+    try{
+        struct dirent *entry;
+        DIR *dir = opendir(path.c_str());
 
-    //         if (is_directory(p)){
-    //             for (boost::filesystem::directory_entry& x : boost::filesystem::directory_iterator(p)){
-    //                 if (is_regular_file(x.path()) && x.path().string().find(".data.over") != std::string::npos){
-    //                     std::cout << "   " << x.path() << '\n';
-    //                     long int t =  static_cast<long int> (boost::filesystem::last_write_time(x));
-    //                     std::cout << "time:" << t <<std::endl;
-    //                     files.push_back(std::pair<std::string, long int>(x.path().string(),t));
-    //                 }
-    //             }
-    //         }
-    //         else
-    //             std::cout <<"empty directory\n";
-    //     }
-    //     else
-    //         std::cout << p << " does not exist\n";
+        if (dir == NULL)
+        {
+            return;
+        }
+        while ((entry = readdir(dir)) != NULL)
+        {
+            std::string filename(entry->d_name);
+            if (filename.find(".data.over") != std::string::npos){
+                std::cout<<entry->d_name<<std::endl;
+            }
+        }
+        closedir(dir);
 
-    //     // 将文件按时间排序
-    //     std::sort(files.begin(), files.end(),
-    //             [&](std::pair<std::string, long int> a, std::pair<std::string, long int> b){
-    //                         return a.second < b.second;});
+        //     // 将文件按时间排序
+        //     std::sort(files.begin(), files.end(),
+        //             [&](std::pair<std::string, long int> a, std::pair<std::string, long int> b){
+        //                         return a.second < b.second;});
 
-    //     return ;
-    // }
-    // catch (const boost::filesystem::filesystem_error& ex)
-    // {
-    //     std::cout << ex.what() << '\n';
-    // }
+    }catch(std::exception e){
+        LOG(INFO)<<e.what();
+    }
+    for (auto it : filenames){
+        LOG(INFO)<<it;
+    }
+
 }
 void FlowRpcAsynNode::dump(){
     //if this Node exit

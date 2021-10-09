@@ -37,7 +37,7 @@ void MonitorNode::run() {
 
          if (input_queue_->Empty())
          {
-//             std::this_thread::sleep_for(std::chrono::milliseconds(500));
+             std::this_thread::sleep_for(std::chrono::milliseconds(10000));
              continue;
          }
 	     std::shared_ptr<algo::vision::AlgoObject> context;
@@ -46,7 +46,7 @@ void MonitorNode::run() {
 	             std::dynamic_pointer_cast<AlgoData>(context);
 	
 
-         std::this_thread::sleep_for(std::chrono::milliseconds (500));
+         std::this_thread::sleep_for(std::chrono::milliseconds (5000));
 
          SendMsg(message);
          // 手动快速释放内存

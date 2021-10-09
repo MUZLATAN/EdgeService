@@ -40,7 +40,7 @@ void LocalVideoLoaderNode::run() {
 
         output_queue_->Push(frame, false);
         is_ready_ = true;
-        std::this_thread::sleep_for(std::chrono::milliseconds(66));
+        std::this_thread::sleep_for(std::chrono::milliseconds(5000));
     }
 }
 

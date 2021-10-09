@@ -23,7 +23,7 @@ void DispatchNode::run() {
 
          std::shared_ptr<algo::vision::AlgoObject> message;
          if (input_queue_->Empty()) {
-             std::this_thread::sleep_for(std::chrono::milliseconds(500));
+             std::this_thread::sleep_for(std::chrono::milliseconds(5000));
              continue;
          }
 	     input_queue_->Pop(message);
