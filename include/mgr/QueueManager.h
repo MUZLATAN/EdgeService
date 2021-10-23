@@ -22,7 +22,6 @@ class Queue {
     bool Push(T&& t, bool block = true) {
         // todo default lost some data.
         if (Size() >= cap_) {
-            // LOG(INFO) << " common cap_ full " ;
             return false;
         }
         queue_impl_->push(t);
@@ -53,7 +52,7 @@ class Queue<std::shared_ptr<algo::vision::AlgoObject>> {
     bool Push(std::shared_ptr<algo::vision::AlgoObject>&& t, bool block = true) {
         if (Size() >= cap_) {
             // todo default lost some data.
-            //  LOG(INFO) << " this queue is full, now lost it.... " ;
+            //  std::cout << " this queue is full, now lost it.... " ;
             return false;
         }
         queue_impl_->push(t);

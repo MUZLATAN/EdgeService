@@ -1,7 +1,5 @@
 #include "network/HttpClient.h"
 
-#include <glog/logging.h>
-
 #include <mutex>
 #include <thread>
 #include "common.h"

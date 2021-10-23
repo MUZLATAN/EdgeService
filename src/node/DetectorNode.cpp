@@ -24,7 +24,7 @@ void DetectorNode::init() {
         QueuePtr q;
         QueueManager::SafeGet(base_node, q);
         next_node_unit_[base_node] = q;
-        LOG(INFO) << base_node << " add to detectornode next queue. ";
+        std::cout << base_node << " add to detectornode next queue. "<<std::endl;
     }
 }
 
@@ -43,10 +43,11 @@ void DetectorNode::run() {
         std::shared_ptr<AlgoFrame> frame = std::dynamic_pointer_cast<algo::core::AlgoFrame>(context);
 
         if (frame->cvImage.empty()) {
-            LOG(INFO) << " queue size: " << input_queue_->Size();
+            std::cout << " queue size: " << input_queue_->Size()<<std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(2));
             continue;
         }
+        //可以注释
         std::this_thread::sleep_for(std::chrono::seconds(5));
         std::vector<Box> object_boxes;
         std::shared_ptr<Event> ent = std::make_shared<LoggerEvent>(frame->camera_sn, frame->camera_time);
@@ -55,7 +56,7 @@ void DetectorNode::run() {
         std::shared_ptr<AlgoData>data = std::make_shared<AlgoData>(object_boxes, frame);
         for (auto& kv : next_node_unit_) kv.second->Push(data);
     }
-    LOG(INFO) << node_name_ << " exit .......";
+    std::cout << node_name_ << " exit ......."<<std::endl;
 }
 
 }  // namespace vision

@@ -18,11 +18,11 @@ class Node {
     Node(const std::string& name) : node_name_(name) {
         gt = GetGlobalVariable();
     }
-    virtual ~Node() { LOG(INFO) << node_name_ << " exit."; }
+    virtual ~Node() { std::cout << node_name_ << " exit."<<std::endl; }
     virtual void init();
     virtual void run() = 0;
     virtual void updateConf(){};
-    void print() { LOG(INFO) << "print info " << node_name_; }
+    void print() { std::cout << "print info " << node_name_<<std::endl; }
     std::string getNodeName() { return node_name_; }
     void setNextNode(const std::string& netx_node) {
         next_node_name_ = netx_node;

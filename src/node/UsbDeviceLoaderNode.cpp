@@ -19,11 +19,11 @@ namespace vision {
 
 void UsbDeviceLoaderNode::init() {
     QueueManager::SafeGet(ALGO_NODE_DETECT, output_queue_);
-    LOG(INFO) << "usb test get value: " << gt->camera_sns;
+    std::cout << "usb test get value: " << gt->camera_sns<<std::endl;
 
     // init node
     int cam_id = findCamera();
-    LOG(INFO) << " camera id: " << cam_id;
+    std::cout << " camera id: " << cam_id<<std::endl;
     capture_ = std::make_unique<cv::VideoCapture>(cam_id);
     capture_->set(cv::CAP_PROP_BUFFERSIZE, 3);
 
@@ -42,12 +42,12 @@ void UsbDeviceLoaderNode::init() {
             ConfigureManager::instance()->setAsInt("video_width", frame.cols);
             ConfigureManager::instance()->setAsInt("video_height", frame.rows);
             if (width_ != frame.cols || height_ != frame.rows) {
-                LOG(ERROR) << "select resolution: [" << width_ << "," << height_
+                std::cout << "select resolution: [" << width_ << "," << height_
                            << "], after set,  get resolution:[ " << frame.cols
-                           << "," << frame.rows << " ]";
+                           << "," << frame.rows << " ]"<<std::endl;
             }
-            LOG(INFO)
-                << "We set the video_width/video_height to ConfigureManager.";
+            std::cout
+                << "We set the video_width/video_height to ConfigureManager."<<std::endl;
         }
     } else {
         reopenCamera();
@@ -121,7 +121,7 @@ void UsbDeviceLoaderNode::selectResolution() {
         }
     }
 
-    LOG(INFO) << "cam real width:" << width_ << " ,real height:" << height_;
+    std::cout << "cam real width:" << width_ << " ,real height:" << height_<<std::endl;
 }
 
 int UsbDeviceLoaderNode::findCamera() {
@@ -135,7 +135,7 @@ int UsbDeviceLoaderNode::findCamera() {
             if (ret == 0) {
                 flag = true;
                 int video = entry->d_name[5] - '0';
-                // LOG(INFO) << entry->d_name[5] << " " << video ;
+                // std::cout << entry->d_name[5] << " " << video ;
                 if (infoCamera("/dev/video" + std::to_string(video))) {
                     closedir(dir);
                     return video;
@@ -157,14 +157,14 @@ void UsbDeviceLoaderNode::reopenCamera() {
         }
 
         std::this_thread::sleep_for(std::chrono::seconds(2));
-        LOG(INFO) << "******Trying to reconnect camera now****";
+        std::cout << "******Trying to reconnect camera now****"<<std::endl;
 
         int cam_id = findCamera();
-        LOG(INFO) << "camera id: " << cam_id;
+        std::cout << "camera id: " << cam_id<<std::endl;
 
         if (cam_id < 0) {
             std::this_thread::sleep_for(std::chrono::seconds(5));
-            LOG(INFO) << " search camera id is invalid. ";
+            std::cout << " search camera id is invalid. "<<std::endl;
             continue;
         }
 
@@ -173,8 +173,8 @@ void UsbDeviceLoaderNode::reopenCamera() {
         bool opened = capture_->open(cam_id);
         if (!capture_->isOpened()) {
             std::this_thread::sleep_for(std::chrono::seconds(5));
-            LOG(INFO) << " image frame isOpened is false. opened flag: "
-                      << opened;
+            std::cout << " image frame isOpened is false. opened flag: "
+                      << opened<<std::endl;
             continue;
         }
 
@@ -183,23 +183,23 @@ void UsbDeviceLoaderNode::reopenCamera() {
         capture_->set(cv::CAP_PROP_FPS, 15);
         // capture_->set(CV_CAP_PROP_FOURCC, CV_FOURCC('M', 'J', 'P', 'G'));
 
-        LOG(INFO) << " camid: " << cam_id << "width: " << width_
-                  << " height: " << height_;
+        std::cout << " camid: " << cam_id << "width: " << width_
+                  << " height: " << height_<<std::endl;
 
         // set camera video param
         cv::Mat frame;
         if (!capture_->read(frame)) {
-            LOG(INFO) << " image frame empty. ";
+            std::cout << " image frame empty. "<<std::endl;
             continue;
         }
 
         ConfigureManager::instance()->setAsInt("video_width", frame.cols);
         ConfigureManager::instance()->setAsInt("video_height", frame.rows);
-        LOG(INFO) << "opened: " << frame.cols << " " << frame.rows;
+        std::cout << "opened: " << frame.cols << " " << frame.rows<<std::endl;
         if (width_ != frame.cols || height_ == frame.rows) {
-            LOG(ERROR) << "select resolution: [" << width_ << "," << height_
+            std::cout << "select resolution: [" << width_ << "," << height_
                        << "], after set resolution:[ " << frame.cols << ","
-                       << frame.rows << " ]";
+                       << frame.rows << " ]"<<std::endl;
         }
 
         frame_id_ = 0;
@@ -213,7 +213,7 @@ void UsbDeviceLoaderNode::run() {
     bool algo_door = ConfigureManager::instance()->getAsInt("algo_door");
     int64_t last_heartbeat_time = 0;
 
-    LOG(INFO) << "---->START: " << __FUNCTION__;
+    std::cout << "---->START: " << __FUNCTION__<<std::endl;
 
     while (true) {
         if (gt->sys_quit) {
@@ -223,7 +223,7 @@ void UsbDeviceLoaderNode::run() {
         auto frame = std::make_shared<algo::core::AlgoFrame>();
         if (!capture_->read(frame->cvImage)) {
             // while loop for lookfor camera device
-            LOG(INFO) << " reopen camera.";
+            std::cout << " reopen camera."<<std::endl;
             reopenCamera();
             continue;
         }
@@ -306,7 +306,7 @@ bool UsbDeviceLoaderNode::infoCamera(const std::string& devName) {
             std::pair<int, int> resolution =
                 std::make_pair(frmsize.discrete.width, frmsize.discrete.height);
             suppered_resolution_vec_.emplace_back(resolution);
-            // LOG(INFO) << "suppered resolution: " << frmsize.discrete.width
+            // std::cout << "suppered resolution: " << frmsize.discrete.width
             //           << " " << frmsize.discrete.height;
             // frame rate
             for (k = 0;; k++) {

@@ -4,7 +4,6 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
-#include <glog/logging.h>
 
 namespace algo {
 namespace vision {
@@ -125,7 +124,6 @@ class ObjectManager : public std::unordered_map<K, T> {
 
 	T GetNextObj(void) {
 		T& ret = seq_ir_->second;
-		LOG(INFO) << "key: " << seq_ir_->first ;
 
 		seq_ir_++;
 
@@ -277,7 +275,7 @@ class SafeObjectManager : public ObjectManager<M, T, K> {
 		auto end = (*manager).end();
 
 		while (ir != end) {
-			LOG(INFO) << "key: " << ir->first << " ptr: " << ir->second ;
+			std::cout << "key: " << ir->first << " ptr: " << ir->second <<std::endl;
 			ir++;
 		}
 	}

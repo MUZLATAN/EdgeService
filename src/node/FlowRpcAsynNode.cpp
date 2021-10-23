@@ -24,9 +24,8 @@ void FlowRpcAsynNode::SendToFlowServer(const std::string& limbustype,
     Json::Value limbus_datapck;
     //按照既有的规定这里的datatype 如果不为 -1 这里的data就需要是字符串的json, 
     //如果datatype 为-1 那么这里的数据需要根据实际情况而定
-    LOG(INFO)<<"here";
 
-    LOG(INFO)<<dataurl;
+    std::cout<<dataurl<<std::endl;
     Json::Value event;
     reader.parse(eventStr,event);
     limbus_datapck["body"] = event;
@@ -35,13 +34,13 @@ void FlowRpcAsynNode::SendToFlowServer(const std::string& limbustype,
 
 
     std::string outputJson = Json::FastWriter().write(limbus_datapck);
-    LOG(INFO) <<outputJson;
+    std::cout <<outputJson<<std::endl;
 
     std::unique_lock<std::mutex> qlock(m_qmutex, std::defer_lock);
     qlock.lock();
     {
         m_queue.push(outputJson);
-        // LOG(INFO)<<"push "<<m_queue.size();
+        // std::cout<<"push "<<m_queue.size();
     }
     qlock.unlock();
 
@@ -51,7 +50,7 @@ void FlowRpcAsynNode::SendToFlowServer(const std::string& limbustype,
 
 bool FlowRpcAsynNode::sendMessage(const std::string& data) {
 //    if (data.size() == 0) {
-//        LOG(INFO) << "NOTE: message size must big than zero";
+//        std::cout << "NOTE: message size must big than zero";
 //        return false;
 //    }
 //    std::string response;
@@ -76,10 +75,9 @@ bool FlowRpcAsynNode::sendMessage(const std::string& data) {
 
 
 void FlowRpcAsynNode::run() {
-    sys_data_path =
-        ConfigureManager::instance()->getAsString("sys_path") + "/data/";
+    sys_data_path =std::string(ROOTPATH) + "FLOW/data/";
 
-    LOG(INFO) <<sys_data_path;
+    std::cout <<sys_data_path;
 
     LoadFileNames(sys_data_path);
 
@@ -111,7 +109,7 @@ void FlowRpcAsynNode::run() {
         //     SetTime();
         // }
         //不断取数据
-        LOG(INFO)<<"flow rpc";
+        std::cout<<"flow rpc"<<std::endl;
 
         if (m_queue.empty()){
             std::this_thread::sleep_for(std::chrono::seconds(5));
@@ -165,7 +163,7 @@ void FlowRpcAsynNode::run() {
                 m_fail_queue.pop();
             }
             ofs.close();
-            LOG(INFO)<<"m_faile_queue size is greater than 5!!! save in file and m_faile_queue size is: "<<m_fail_queue.size()<<name;
+            std::cout<<"m_faile_queue size is greater than 5!!! save in file and m_faile_queue size is: "<<m_fail_queue.size()<<name<<std::endl;
             m_fqlock.unlock();
         }
 
@@ -185,7 +183,7 @@ void FlowRpcAsynNode::Split(const std::string& data){
         index = dataidx+strlen(SEPARATION);
     }
     if (data.find_last_of(SEPARATION) != (data.length()-1))
-        LOG(INFO)<<"not end of "<<SEPARATION<<", the lastest record maybe wrong";
+        std::cout<<"not end of "<<SEPARATION<<", the lastest record maybe wrong"<<std::endl;
 
 }
 
@@ -215,19 +213,19 @@ void FlowRpcAsynNode::MoveData() {
         
         if (!m_fail_queue.empty() && success_flag){
             //failed queue pop;
-            LOG(INFO) <<"data from failed queue lock";
+            std::cout <<"data from failed queue lock"<<std::endl;
             m_fqlock.lock();
             auto info = m_fail_queue.front();
             m_fail_queue.pop();
             m_fqlock.unlock();
-            LOG(INFO)<<"data from failed queue ulock";
+            std::cout<<"data from failed queue ulock"<<std::endl;
             //data queue enqueue;
             if (!info.empty()){
-                LOG(INFO)<<"failed queue to data queue lock";
+                std::cout<<"failed queue to data queue lock"<<std::endl;
                 m_qlock.lock();
                 m_queue.push(info);
                 m_qlock.unlock();
-                LOG(INFO)<<"failed queue to data queue unlock";
+                std::cout<<"failed queue to data queue unlock"<<std::endl;
             }
                 
         }
@@ -244,20 +242,20 @@ void FlowRpcAsynNode::MoveData() {
                 std::ostringstream oss;
                 oss<< in.rdbuf();
                 std::string str = oss.str();
-                LOG(INFO)<<str<<std::endl;
+                std::cout<<str<<std::endl;
                 //将str分开存入m_queuue
                 m_qlock.lock();
                 Split(str);
                 m_qlock.unlock();
                 //从维护的vector 中删除记录
                 files.erase(files.begin());
-                LOG(INFO)<<files.begin()->first<<std::endl;
+                std::cout<<files.begin()->first<<std::endl;
                 for (auto fileit = files.begin(); fileit != files.end(); fileit++)
-                    LOG(INFO)<<fileit->first<<std::endl;
+                    std::cout<<fileit->first<<std::endl;
 
                 //删除文件
                 if(::remove(top.first.c_str())!=0){
-                    LOG(INFO)<<"delete file failed!"<<std::endl;
+                    std::cout<<"delete file failed!"<<std::endl;
                 }
             }
             success_flag = false;
@@ -280,22 +278,26 @@ void FlowRpcAsynNode::LoadFileNames(const std::string& path){
         while ((entry = readdir(dir)) != NULL)
         {
             std::string filename(entry->d_name);
-            if (filename.find(".data.over") != std::string::npos){
-                std::cout<<entry->d_name<<std::endl;
+            int idx = filename.find(".data.over");
+            if (idx != std::string::npos){
+                std::string times = filename.substr(0, idx);
+                long int timestamp;
+                timestamp = atol(times.c_str());
+                files.emplace_back(std::make_pair(std::move(path+filename), timestamp));
             }
         }
         closedir(dir);
 
-        //     // 将文件按时间排序
-        //     std::sort(files.begin(), files.end(),
-        //             [&](std::pair<std::string, long int> a, std::pair<std::string, long int> b){
-        //                         return a.second < b.second;});
+        // 将文件按时间排序
+        std::sort(files.begin(), files.end(),
+                     [&](std::pair<std::string, long int> a, std::pair<std::string, long int> b){
+                                 return a.second < b.second;});
 
     }catch(std::exception e){
-        LOG(INFO)<<e.what();
+        std::cout<<e.what()<<std::endl;
     }
     for (auto it : filenames){
-        LOG(INFO)<<it;
+        std::cout<<it<<std::endl;
     }
 
 }
@@ -307,7 +309,7 @@ void FlowRpcAsynNode::dump(){
     std::ofstream ofs(name, std::ios::app);
 
     if (!m_queue.empty()){
-        LOG(INFO)<<"m_queue not empty!";
+        std::cout<<"m_queue not empty!"<<std::endl;
         while(m_queue.size()> 0){
             ofs<<m_queue.front()<<SEPARATION;
             m_queue.pop();
@@ -316,7 +318,7 @@ void FlowRpcAsynNode::dump(){
 
     // dump the failed queue's content
     if (!m_fail_queue.empty()){
-        LOG(INFO)<<"m_fail_queue not empty";
+        std::cout<<"m_fail_queue not empty"<<std::endl;
         while(m_fail_queue.size() > 0){
             ofs<<m_fail_queue.front()<<SEPARATION;
             m_fail_queue.pop();

@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <vector>
 #include <thread>
+#include <unistd.h>
 
 #include "mgr/ObjectManager.h"
 #include "mgr/QueueManager.h"

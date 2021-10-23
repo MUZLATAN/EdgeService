@@ -1,15 +1,12 @@
 #pragma once
-#include <glog/logging.h>
 #include <json/json.h>
-
 #include <mutex>
 #include <queue>
-
+#include <sys/stat.h>
 
 #include "DynamicFactory.h"
 #include "mgr/ConfigureManager.h"
 #include "node/Node.h"
-
 
 #define  SEPARATION "#&&#"
 
@@ -25,6 +22,7 @@ class FlowRpcAsynNode : public Node,
        count_successfully = 0;
        count_failed = 0;
        success_flag = true;
+
     };
     virtual ~FlowRpcAsynNode() { 
        dump();
@@ -33,7 +31,7 @@ class FlowRpcAsynNode : public Node,
     void SendToFlowServer(const std::string& limbustype, const std::string& dataurl, const int datatype, const std::string& eventStr);
 
     void run();
-    void init() { LOG(INFO) << "flow client init"; }
+    void init() { std::cout << "flow client init"<<std::endl; }
 
  private:
     bool sendMessage(const std::string& data);
@@ -59,10 +57,19 @@ class FlowRpcAsynNode : public Node,
     std::queue<std::string> m_fail_queue; //failed queue
     std::mutex m_qmutex;   // data queue mutex
     std::mutex m_fqmutex;  //failed queue mutex;
+
+    //记录保存本地的文件数据结构
+    // key:     name
+    // value:   time
     std::vector<std::pair<std::string, long int>> files;
 
+    struct stat m_stat;
+
+    //统计发送数据成功或失败的次数
     int count_successfully;
     int count_failed;
+
+
     //parse Json
     Json::Reader reader;
     

@@ -1,14 +1,5 @@
 
 #include "SolutionPipeline.h"
-
-// #include <folly/executors/CPUThreadPoolExecutor.h>
-// #include <folly/executors/GlobalExecutor.h>
-// #include <folly/executors/IOThreadPoolExecutor.h>
-// #include <folly/futures/Future.h>
-// #include <folly/init/Init.h>
-#include <glog/logging.h>
-
-
 #include <functional>
 
 #include "mgr/ConfigureManager.h"
@@ -46,24 +37,24 @@ static std::shared_ptr<Node> buildNode(std::string& name,
                                                  const std::string& next,
                                                  Targs&&... params) {
     std::string node_name = "algo::vision::" + name;
-    LOG(INFO) << " load node: " << node_name;
+    std::cout << " load node: " << node_name<<std::endl;
     auto ptr = NodeBuild::MakeSharedNode(node_name, params...);
 
     if (!ptr) {
         // todo log
         //*todo crash log
-        LOG(FATAL) << node_name
+        std::cout<< node_name
                    << " dynamic create error because the node don't "
-                      "register, user don't implement the node.";
+                      "register, user don't implement the node."<<std::endl;
     }
 
     ptr->setNextNode(next);
 
-    LOG(INFO) << " this node queue_name: " << name;
+    std::cout << " this node queue_name: " << name<<std::endl;
     auto queue = std::make_shared<Queue<std::shared_ptr<algo::vision::AlgoObject>>>(__MAX_IMAGE_QUEUE_SIZE__);
 
     QueueManager::SafeAdd(name, queue);
-    LOG(INFO) << "  after this node queue_name: " << name;
+    std::cout << "  after this node queue_name: " << name<<std::endl;
 
 
     return ptr;
@@ -76,7 +67,7 @@ void SolutionPipeline::Build() {
         if (i != solution_process_vec.size() - 1) {
             next = solution_process_vec[i + 1];
         } else {
-            LOG(INFO) << "solution last node: " << solution_process_vec[i];
+            std::cout << "solution last node: " << solution_process_vec[i]<<std::endl;
             next = ALGO_NODE_DISPATCH;
         }
 
@@ -87,12 +78,12 @@ void SolutionPipeline::Build() {
 }
 
 void SolutionPipeline::BuildVideoInput() {
-    LOG(INFO) << "build video input.";
+    std::cout << "build video input."<<std::endl;
     global_video_input_ =
         ConfigureManager::instance()->getAsVectorString("video_input");
 
     if (global_video_input_.size() < 1) {
-        LOG(FATAL) << " solution don't assigin video/rtst stream.";
+        std::cout << " solution don't assigin video/rtst stream."<<std::endl;
         // todo log to chunnel
     }
 
@@ -109,7 +100,7 @@ void SolutionPipeline::BuildVideoInput() {
 
         } else if ((*iter).find("rtmp") != (*iter).npos) {
             // rtmp
-            LOG(INFO) << "build rtmp input.";
+            std::cout << "build rtmp input."<<std::endl;
         } else {
             // local video file
             data_loader_name = ALGO_NODE_LOCALVIDEO;
@@ -126,7 +117,7 @@ void SolutionPipeline::BuildAndStartCoreGlobal() {
     for (auto iter = global_core_executor_names_.begin();
          iter != global_core_executor_names_.end(); iter++) {
         std::string node_name = "algo::vision::" + (*iter);
-        LOG(INFO) << " core node: " << node_name;
+        std::cout << " core node: " << node_name<<std::endl;
 
         std::string next;
         auto ptr = buildNode(*iter, next);
@@ -141,7 +132,7 @@ void SolutionPipeline::BuildAndStartCoreGlobal() {
 
         int idx = GetGlobalVariable()->g_thread.size();
         GetGlobalVariable()->g_thread.emplace_back(std::thread([&](){
-            LOG(INFO) << ptr->getNodeName() << " start run.";
+            std::cout << ptr->getNodeName() << " start run."<<std::endl;
             return ptr->run();
         }));
         GetGlobalVariable()->g_thread[idx].detach();
@@ -161,7 +152,7 @@ void SolutionPipeline::BuildAndStartGlobal() {
 
         int idx = GetGlobalVariable()->g_thread.size();
         std::thread t([&](){
-            LOG(INFO) << ptr->getNodeName() << " start run.";
+            std::cout << ptr->getNodeName() << " start run."<<std::endl;
             ptr->run();
         });
         GetGlobalVariable()->g_thread.emplace_back(std::move(t));
@@ -179,10 +170,10 @@ void SolutionPipeline::BuildAndStartGlobal() {
 
 void SolutionPipeline::Start() {
     for (auto iter = executors_.begin(); iter != executors_.end(); ++iter) {
-        LOG(INFO) << " thread start: " << (*iter)->getNodeName();
+        std::cout << " thread start: " << (*iter)->getNodeName()<<std::endl;
         int idx = GetGlobalVariable()->g_thread.size();
         GetGlobalVariable()->g_thread.push_back(std::thread([&](){
-            LOG(INFO) << (*iter)->getNodeName() << " start run.";
+            std::cout << (*iter)->getNodeName() << " start run."<<std::endl;
             return (*iter)->run();
         }));
         GetGlobalVariable()->g_thread[idx].detach();
@@ -195,11 +186,11 @@ void SolutionPipeline::StopAll() { GetGlobalVariable()->sys_quit = true; }
 void SolutionPipeline::StartVideoInput() {
     for (auto iter = global_video_input_executors_.begin();
          iter != global_video_input_executors_.end(); ++iter) {
-        LOG(INFO) << "video input thread start: "
-                  << iter->second->getNodeName();
+        std::cout << "video input thread start: "
+                  << iter->second->getNodeName()<<std::endl;
         int idx = GetGlobalVariable()->g_thread.size();
         GetGlobalVariable()->g_thread.push_back(std::thread([&](){
-            LOG(INFO) << iter->second->getNodeName() << " start run.";
+            std::cout << iter->second->getNodeName() << " start run."<<std::endl;
             return iter->second->run();
         }));
         GetGlobalVariable()->g_thread[idx].detach();

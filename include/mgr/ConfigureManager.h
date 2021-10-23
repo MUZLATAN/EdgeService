@@ -1,8 +1,6 @@
 #pragma once
 
 #include <json/json.h>
-#include <glog/logging.h>
-
 #include <fstream>
 #include <iostream>
 #include <memory>

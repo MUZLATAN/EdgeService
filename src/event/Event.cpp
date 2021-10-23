@@ -1,8 +1,5 @@
 #include "event/Event.h"
-
 #include <json/json.h>
-#include <glog/logging.h>
-
 #include <chrono>
 #include <fstream>
 
@@ -54,7 +51,7 @@ void LoggerEvent::handler() {
     data["camera_sn"] = cameraSn;
     data["prefix"] = prefix_;
     std::string payload = Json::FastWriter().write(data);
-    LOG(INFO)<<payload;
+    std::cout<<payload<<std::endl;
     FlowPub("LoggerEvent", "", -1, payload );
 }
 
@@ -79,7 +76,7 @@ void MonitorEvent::handler() {
         monitorValue["Crowd"] = crowd_info_vec;
 
         std::string payload = Json::FastWriter().write(monitorValue);
-        LOG(INFO)<<payload;
+        std::cout<<payload<<std::endl;
 
         FlowPub("MonitorEvent", "", -1, payload );
 

@@ -3,7 +3,7 @@
     "monitor"
   ],
   "video_input": [
-    "rtsp://admin:admin@192.168.110.123:554/h264/ch39/main/av_stream"
+    "rtsp://admin:admin@192.168.110.59:554/h264/ch39/main/av_stream"
   ],
   "sys_path": "../FLOW"
 }

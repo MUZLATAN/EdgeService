@@ -6,14 +6,13 @@
 #include <iostream>
 
 #include "common.h"
-#include "glog/logging.h"
 #include "network/HttpClient.h"
 
 
 namespace algo {
 namespace vision {
 
-#define rootPath "../config/"
+
 
 
 class ConfigPack {
@@ -33,16 +32,16 @@ ConfigureManager* ConfigureManager::instance(CONFIGType type) {
     return cfp.getInstance(type);
 }
 ConfigureManager::ConfigureManager() {
-    config_path = rootPath;
-    config_path += "service_default.json";
-    LOG(INFO) << config_path;
+    config_path = ROOTPATH;
+    config_path += "config/service_default.json";
+    std::cout << config_path;
 };
 void ConfigureManager::init() {
     std::ifstream json_file_stream(config_path);
     if (json_file_stream.is_open()) {
-        LOG(INFO) << "Load config success! path: " << config_path;
+        std::cout << "Load config success! path: " << config_path;
     } else {
-        LOG(INFO) << "Load config failed! Please check " << config_path;
+        std::cout << "Load config failed! Please check " << config_path;
     }
 
     std::stringstream config_string_stream;
@@ -52,7 +51,7 @@ void ConfigureManager::init() {
     std::string config_string = config_string_stream.str();
 
 
-    LOG(INFO) << config_string;
+    std::cout << config_string;
     Json::Value str_json;
     std::string err;
     Json::CharReaderBuilder jsoriReader;
@@ -81,9 +80,9 @@ void ConfigureManager::init() {
     };
 
     if (!func()) {
-        LOG(INFO) << "NOTE: use default config.json";
+        std::cout << "NOTE: use default config.json";
     } else {
-        LOG(INFO) << "NOTE: use remote config.json";
+        std::cout << "NOTE: use remote config.json";
     }
 }
 double ConfigureManager::getAsDouble(const std::string& key) {

@@ -20,7 +20,7 @@ void RtspLoaderNode::init() {
     capture_->set(cv::CAP_PROP_BUFFERSIZE, 3);
     capture_->set(cv::CAP_PROP_FPS, 15);
 
-    LOG(INFO) << "rtsp init done";
+    std::cout << "rtsp init done";
 }
 
 void RtspLoaderNode::reopenCamera() {
@@ -31,8 +31,7 @@ void RtspLoaderNode::reopenCamera() {
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        LOG(INFO) << "******Trying to reconnect rtsp camera now****";
+        std::cout << "******Trying to reconnect rtsp camera now****";
 
         bool opened = capture_->open(rtsp_stream_addr_);
 
@@ -44,7 +43,7 @@ void RtspLoaderNode::reopenCamera() {
         cv::Mat frame;
         capture_->read(frame);
         if (frame.empty()) {
-            LOG(INFO) << "opened: " << frame.cols << " " << frame.rows;
+            std::cout << "opened: " << frame.cols << " " << frame.rows;
             continue;
         }
         is_ready_ = true;
@@ -61,7 +60,7 @@ void RtspLoaderNode::run() {
         }
         frame_id_++;
         cnt = output_queue_->Size();
-        // std::this_thread::sleep_for(std::chrono::seconds(5*cnt));
+        std::this_thread::sleep_for(std::chrono::seconds(5*cnt));
         capture_->read(frame->cvImage);
 
         if (frame->cvImage.empty()) {
@@ -74,7 +73,7 @@ void RtspLoaderNode::run() {
         output_queue_->Push(frame, false);
 
     }
-    LOG(INFO) << node_name_ << " exit .......";
+    std::cout << node_name_ << " exit .......";
 }
 
 }  // namespace vision

@@ -11,7 +11,6 @@ set(CMAKE_VERBOSE_MAKEFILE  ON)
 enable_testing()
 set(CMAKE_SYSTEM_NAME Linux)
 
-find_library(BOOSTTEST_LIBRARY NAMES boost_unit_test_framework)
 
 # add_compile_options(-fPIC)
 option(WITH_HEAPPROFILE " build with heap profile " OFF)
@@ -20,35 +19,23 @@ option(WITH_GTESTS "build unit test " OFF)
 list(
         APPEND
         REQUEST_LIBS
-        gflags
-        glog
-        boost_context
-        unwind
-        lzma
-        iberty
         pthread # folly depend on pthread, need put it down
+        opencv_videoio
+        opencv_video
         opencv_core
         opencv_imgproc
         opencv_highgui
         opencv_imgcodecs
-        opencv_videoio
-        opencv_video
-        opencv_calib3d
         jsoncpp
-        x264
+
 )
 
-#include_directories(/usr/local/include/)
-#include_directories(/usr/include /usr/include/opencv4 /usr/include/jsoncpp/)
-#link_directories(/usr/local/lib /usr/lib)
 
- set(ALGO_3RDPARTY_PATH /env/platforms/x86_64)
 
- message(STATUS "NOTE: ALGO_3RDPARTY_PATH is: " ${ALGO_3RDPARTY_PATH})
- include_directories(${ALGO_3RDPARTY_PATH}/include/)
- link_directories(${ALGO_3RDPARTY_PATH}/lib
-         ${ALGO_3RDPARTY_PATH}/static
-         ${ALGO_3RDPARTY_PATH}/so )
+
+
+ include_directories(${CMAKE_CURRENT_LIST_DIR}/dependencies/x86/include/)
+ link_directories(${CMAKE_CURRENT_LIST_DIR}/dependencies/x86/lib)
 
 add_definitions("-D__PLATFORM_X86__")
 

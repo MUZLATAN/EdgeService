@@ -9,7 +9,7 @@
 #include <thread>
 
 #define ALGO_SYS_PATH "sys_path"        // system path
-
+#define ROOTPATH "../"
 
 // NOTE: storage for node name
 #define ALGO_NODE_MONITOR "MonitorNode"

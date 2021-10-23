@@ -11,7 +11,6 @@
 #include <thread>
 
 #include "SolutionPipeline.h"
-#include "glog/logging.h"
 #include "mgr/ConfigureManager.h"
 #include "node/DynamicFactory.h"
 #include "node/head.h"
@@ -21,7 +20,7 @@ using namespace std::chrono;
 
 
 ServiceDaemon::ServiceDaemon(int argc, char** argv) : version_("") {
-    LOG(INFO) << "NOTE: ServiceDaemon Start ";
+    std::cout << "NOTE: ServiceDaemon Start ";
     env.init();
 }
 
@@ -34,7 +33,7 @@ void ServiceDaemon::Loop() {
 
      // init solutionpipeline
      for (int i = 0; i < features.size(); ++i) {
-         LOG(INFO) << i << " " << features[i];
+         std::cout << i << " " << features[i];
          SolutionPipelinePtr sptr =
              std::make_shared<SolutionPipeline>(features[i]);
          if (sptr) {
@@ -64,4 +63,4 @@ void ServiceDaemon::Loop() {
 
 
 
-ServiceDaemon::~ServiceDaemon() { google::ShutdownGoogleLogging(); }
+ServiceDaemon::~ServiceDaemon() {  }
