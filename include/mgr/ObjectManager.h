@@ -275,7 +275,7 @@ class SafeObjectManager : public ObjectManager<M, T, K> {
 		auto end = (*manager).end();
 
 		while (ir != end) {
-			std::cout << "key: " << ir->first << " ptr: " << ir->second <<std::endl;
+			std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "key: " << ir->first << " ptr: " << ir->second <<std::endl;
 			ir++;
 		}
 	}

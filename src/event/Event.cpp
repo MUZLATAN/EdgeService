@@ -11,39 +11,11 @@
 namespace algo {
 namespace vision {
 
-#ifdef __BUILD_GTESTS__
-std::string __event__last_data__;
-std::string LoadLastEventSendData(void) { return __event__last_data__; };
-#endif
-
-inline void MQTTPub(const char *topic, std::string &value) {
-
-};
 
 inline void FlowPub(const std::string& limbustype, const std::string& dataurl, const int datatype, const std::string& eventStr) {
 
     FlowRpcAsynNode_flow->SendToFlowServer(limbustype, dataurl, datatype, eventStr);
 };
-
-void saveCache(Event *e, const std::vector<uchar> &imageBuff,
-               const std::string &ossPath) {
-
-};
-
-void resendCache(void);
-
-
-std::mutex resendCache_mt;
-void resendCache(void) {
-};
-
-
-inline std::string GenValue() { return ""; };
-
-
-
-
-
 
 void LoggerEvent::handler() {
     Json::Value data ;
@@ -51,7 +23,7 @@ void LoggerEvent::handler() {
     data["camera_sn"] = cameraSn;
     data["prefix"] = prefix_;
     std::string payload = Json::FastWriter().write(data);
-    std::cout<<payload<<std::endl;
+    std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<payload<<std::endl;
     FlowPub("LoggerEvent", "", -1, payload );
 }
 
@@ -76,7 +48,7 @@ void MonitorEvent::handler() {
         monitorValue["Crowd"] = crowd_info_vec;
 
         std::string payload = Json::FastWriter().write(monitorValue);
-        std::cout<<payload<<std::endl;
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<payload<<std::endl;
 
         FlowPub("MonitorEvent", "", -1, payload );
 

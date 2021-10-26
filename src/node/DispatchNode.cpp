@@ -30,7 +30,7 @@ void DispatchNode::run() {
 	     std::shared_ptr<Event> event = std::dynamic_pointer_cast<Event>(message);
          dispatch(event);
     }
-    std::cout << node_name_ << " Exit .......";
+    std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << node_name_ << " Exit .......";
 }
 }  // namespace vision
 }  // namespace algo

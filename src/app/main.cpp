@@ -19,17 +19,17 @@ void dump(int sig)
     char **strings;
 
     nptrs = backtrace((void**)buffer, BACKTRACE_SIZE);
-    std::cout<< "ERROR: in sig proc function !!!! sig is:" << sig<<std::endl;
+    std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<< "ERROR: in sig proc function !!!! sig is:" << sig<<std::endl;
 
-    std::cout<<"backtrace() returned %d addresses\n "<<nptrs<<std::endl;
+    std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<"backtrace() returned %d addresses\n "<<nptrs<<std::endl;
 
     strings = backtrace_symbols((void* const*)buffer, nptrs);
     if (strings == NULL) {
-        std::cout<<"backtrace_symbols"<<std::endl;
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<"backtrace_symbols"<<std::endl;
     }
 
     for (j = 0; j < nptrs && strings[j] != NULL; j++)  {
-        std::cout<< j<<" "<<strings[j]<<std::endl;
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<< j<<" "<<strings[j]<<std::endl;
     }
 
     free(strings);

@@ -20,7 +20,7 @@ using namespace std::chrono;
 
 
 ServiceDaemon::ServiceDaemon(int argc, char** argv) : version_("") {
-    std::cout << "NOTE: ServiceDaemon Start ";
+    std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "NOTE: ServiceDaemon Start "<<std::endl;
     env.init();
 }
 
@@ -33,7 +33,7 @@ void ServiceDaemon::Loop() {
 
      // init solutionpipeline
      for (int i = 0; i < features.size(); ++i) {
-         std::cout << i << " " << features[i];
+         std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << i << " " << features[i]<<std::endl;
          SolutionPipelinePtr sptr =
              std::make_shared<SolutionPipeline>(features[i]);
          if (sptr) {

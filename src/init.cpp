@@ -82,9 +82,9 @@ std::vector<std::string> EnvironmentInit::readCameraSnFromFile(
 
     if (!fCameraSnRead) {
         fCameraSnRead.close();
-        std::cout << "NO DEVICE SN"<<std::endl;
-        std::cout << "PATH: " << file<<std::endl;
-        std::cout << " please calture camera sn."<<std::endl;
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "NO DEVICE SN"<<std::endl;
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "PATH: " << file<<std::endl;
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << " please calture camera sn."<<std::endl;
         // log metric
         return sn_vec;
     } else {
@@ -127,7 +127,7 @@ void EnvironmentInit::initDeviceSn() {
         ConfigureManager::instance()->getAsVectorString("video_input");
     for (size_t i = 0; i < device_name_vec.size(); ++i) {
         if (camera_sn_vec.size() >= i + 1) {
-            std::cout << device_name_vec[i] << " <-rtsp/usb, : sn->"
+            std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << device_name_vec[i] << " <-rtsp/usb, : sn->"
                       << camera_sn_vec[i]<<std::endl;
             gt->video_inputs = device_name_vec[i];
             // ServiceVariableManager::Add(device_name_vec[i],

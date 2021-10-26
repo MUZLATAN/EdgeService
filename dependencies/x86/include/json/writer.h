@@ -34,8 +34,8 @@ Usage:
   void writeToStdout(StreamWriter::Factory const& factory, Value const& value) {
     std::unique_ptr<StreamWriter> const writer(
       factory.newStreamWriter());
-    writer->write(value, &std::cout);
-    std::cout << std::endl;  // add lf and flush
+    writer->write(value, &std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  ");
+    std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << std::endl;  // add lf and flush
   }
 \endcode
 */
@@ -82,8 +82,8 @@ Usage:
   builder["indentation"] = "   ";  // or whatever you like
   std::unique_ptr<Json::StreamWriter> writer(
       builder.newStreamWriter());
-  writer->write(value, &std::cout);
-  std::cout << std::endl;  // add lf and flush
+  writer->write(value, &std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  ");
+  std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << std::endl;  // add lf and flush
 \endcode
 */
 class JSON_API StreamWriterBuilder : public StreamWriter::Factory {

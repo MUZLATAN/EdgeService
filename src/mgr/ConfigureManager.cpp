@@ -34,14 +34,14 @@ ConfigureManager* ConfigureManager::instance(CONFIGType type) {
 ConfigureManager::ConfigureManager() {
     config_path = ROOTPATH;
     config_path += "config/service_default.json";
-    std::cout << config_path;
+    std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << config_path;
 };
 void ConfigureManager::init() {
     std::ifstream json_file_stream(config_path);
     if (json_file_stream.is_open()) {
-        std::cout << "Load config success! path: " << config_path;
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "Load config success! path: " << config_path;
     } else {
-        std::cout << "Load config failed! Please check " << config_path;
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "Load config failed! Please check " << config_path;
     }
 
     std::stringstream config_string_stream;
@@ -51,7 +51,7 @@ void ConfigureManager::init() {
     std::string config_string = config_string_stream.str();
 
 
-    std::cout << config_string;
+    std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << config_string;
     Json::Value str_json;
     std::string err;
     Json::CharReaderBuilder jsoriReader;
@@ -80,9 +80,9 @@ void ConfigureManager::init() {
     };
 
     if (!func()) {
-        std::cout << "NOTE: use default config.json";
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "NOTE: use default config.json"<<std::endl;
     } else {
-        std::cout << "NOTE: use remote config.json";
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "NOTE: use remote config.json"<<std::endl;
     }
 }
 double ConfigureManager::getAsDouble(const std::string& key) {

@@ -11,6 +11,11 @@ set(CMAKE_VERBOSE_MAKEFILE  ON)
 enable_testing()
 set(CMAKE_SYSTEM_NAME Linux)
 
+#用于cout 输出__FILE__ 的相对路径
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-builtin-macro-redefined")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__FILE__='\"$(subst  ${CMAKE_SOURCE_DIR}/,,$(abspath $<))\"'")
+
+
 
 # add_compile_options(-fPIC)
 option(WITH_HEAPPROFILE " build with heap profile " OFF)

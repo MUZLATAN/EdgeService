@@ -15,7 +15,7 @@ namespace algo {
 namespace vision {
 
 void MonitorNode::init() {
-    std::cout<<"MonitorNode init  and get queue"<<std::endl;
+    std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<"MonitorNode init  and get queue"<<std::endl;
     QueueManager::SafeGet(node_name_, input_queue_);
     QueueManager::SafeGet(ALGO_NODE_DISPATCH, output_queue_);
     monitor_interval =
@@ -54,7 +54,7 @@ void MonitorNode::run() {
 	             message->frame_->cvImage.release();
 	     }
     }
-    std::cout << node_name_ << " exit ......."<<std::endl;
+    std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << node_name_ << " exit ......."<<std::endl;
 }
 void MonitorNode::SendMsg(std::shared_ptr<AlgoData> message){
     std::vector<int> x_ {1, 2, 3};
@@ -63,7 +63,7 @@ void MonitorNode::SendMsg(std::shared_ptr<AlgoData> message){
     std::shared_ptr<Event> pae =
             std::make_shared<MonitorEvent>(message->frame_->camera_sn, x_, y_, id_, message->frame_->camera_time);
 
-        std::cout << "push Monitor event."<<std::endl;
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "push Monitor event."<<std::endl;
         output_queue_->Push(pae);
 }
 
