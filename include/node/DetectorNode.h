@@ -8,19 +8,19 @@
 #include <opencv2/opencv.hpp>
 #include "common.h"
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 class DetectorNode : public Node, DynamicCreator<DetectorNode> {
  public:
-    DetectorNode() : Node(ALGO_NODE_DETECT) {}
+    DetectorNode() : Node(META_NODE_DETECT) {}
     virtual ~DetectorNode() {}
     virtual void run();
     virtual void init();
 
  private:
     void labelBox(cv::Mat& rgbImage,
-                  std::vector<algo::core::Box>& det_results);
+                  std::vector<meta::core::Box>& det_results);
     cv::Mat template_;
     cv::Mat template2_;
     std::vector<cv::Mat> circles_;
@@ -33,7 +33,7 @@ class DetectorNode : public Node, DynamicCreator<DetectorNode> {
     int64_t last_model_metric_monitor_time_;
 	int64_t image_monitor_interval;
 
-    bool algo_door_ = false;
+    bool meta_door_ = false;
 };
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

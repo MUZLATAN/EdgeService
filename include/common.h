@@ -8,22 +8,21 @@
 #include <memory>
 #include <thread>
 
-#define ALGO_SYS_PATH "sys_path"        // system path
+#define META_SYS_PATH "sys_path"        // system path
 #define ROOTPATH "../"
 
 // NOTE: storage for node name
-#define ALGO_NODE_MONITOR "MonitorNode"
-#define ALGO_NODE_DETECT "DetectorNode"
-#define ALGO_NODE_DISPATCH "DispatchNode"
-#define ALGO_NODE_RTSP "RtspLoaderNode"
-#define ALGO_NODE_USBCAMERA "UsbDeviceLoaderNode"
-#define ALGO_NODE_LOCALVIDEO "LocalVideoLoaderNode"
-#define ALGO_NODE_FLOWRPC "FlowRpcAsynNode"
+#define META_NODE_MONITOR "MonitorNode"
+#define META_NODE_DETECT "DetectorNode"
+#define META_NODE_DISPATCH "DispatchNode"
+#define META_NODE_RTSP "RtspLoaderNode"
+#define META_NODE_LOCALVIDEO "LocalVideoLoaderNode"
+#define META_NODE_FLOWRPC "FlowRpcAsynNode"
 
 
-#ifndef __TYPEDEFINE_ALGO_FRAME__
-#define __TYPEDEFINE_ALGO_FRAME__
-namespace algo {
+#ifndef __TYPEDEFINE_META_FRAME__
+#define __TYPEDEFINE_META_FRAME__
+namespace meta {
 namespace core {
 
 struct landmark {
@@ -49,7 +48,7 @@ typedef struct Box {
 enum CategoryId { cls_face = 2, cls_head = 3, cls_ped = 1 };
 
 
-class BaseFrame : public algo::vision::AlgoObject {
+class BaseFrame : public meta::vision::AlgoObject {
  public:
     BaseFrame() { 
         setCurrentTime(); 
@@ -101,14 +100,14 @@ class BaseFrame : public algo::vision::AlgoObject {
 typedef BaseFrame AlgoFrame;
 
 }  // namespace core
-}  // namespace algo
+}  // namespace meta
 #endif
 
 
 
 
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 class AlgoData : public AlgoObject{
@@ -116,20 +115,20 @@ class AlgoData : public AlgoObject{
     AlgoData(){
         obj_type = 2;
     };
-    AlgoData(std::vector<algo::core::Box>& boxes,
-              std::shared_ptr<algo::core::AlgoFrame> frame)
+    AlgoData(std::vector<meta::core::Box>& boxes,
+              std::shared_ptr<meta::core::AlgoFrame> frame)
         : object_boxes(boxes), frame_(frame){
             obj_type = 2;
         };
  public:
-    std::vector<algo::core::Box> object_boxes;
-    std::shared_ptr<algo::core::AlgoFrame> frame_;
+    std::vector<meta::core::Box> object_boxes;
+    std::shared_ptr<meta::core::AlgoFrame> frame_;
 };
 
 struct GlobalVariable {
  public:
 
-    std::string algo_version = "";
+    std::string meta_version = "";
     std::string sys_version = "";
 
     std::string sys_path = "";
@@ -145,4 +144,4 @@ struct GlobalVariable {
 GlobalVariable* GetGlobalVariable(void);
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

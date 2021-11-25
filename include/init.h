@@ -4,7 +4,7 @@
 
 #include "common.h"
 
-namespace algo {
+namespace meta {
 namespace vision {
 class EnvironmentInit {
  public:
@@ -24,4 +24,4 @@ class EnvironmentInit {
     GlobalVariable* gt = nullptr;
 };
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

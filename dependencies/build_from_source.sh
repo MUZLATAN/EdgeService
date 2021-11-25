@@ -677,9 +677,9 @@ setup
 download_all
 # build_for_hisi
 
-if [ -f "algo_dependencies.tar.gz" ]; 
+if [ -f "meta_dependencies.tar.gz" ]; 
 then
-    rm algo_dependencies.tar.gz
+    rm meta_dependencies.tar.gz
 fi
-tar zcf algo_dependencies.tar.gz ${LIB_PATH}
-echo "================ Tar to algo_dependencies.tar.gz ================"
+tar zcf meta_dependencies.tar.gz ${LIB_PATH}
+echo "================ Tar to meta_dependencies.tar.gz ================"

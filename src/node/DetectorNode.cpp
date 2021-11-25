@@ -8,14 +8,14 @@
 #include "mgr/QueueManager.h"
 #include "util.h"
 
-using namespace algo::core;
+using namespace meta::core;
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 void DetectorNode::init() {
     QueueManager::SafeGet(node_name_, input_queue_);
-    QueueManager::SafeGet(ALGO_NODE_DISPATCH, output_queue_);
+    QueueManager::SafeGet(META_NODE_DISPATCH, output_queue_);
 
     std::vector<std::string> features =
         ConfigureManager::instance()->getAsVectorString("feature");
@@ -34,13 +34,13 @@ void DetectorNode::run() {
             break;
         }
 
-        std::shared_ptr<algo::vision::AlgoObject> context;
+        std::shared_ptr<meta::vision::AlgoObject> context;
         if (input_queue_->Empty()){
             std::this_thread::sleep_for(std::chrono::seconds(5));
             continue;
         }
         input_queue_->Pop(context);
-        std::shared_ptr<AlgoFrame> frame = std::dynamic_pointer_cast<algo::core::AlgoFrame>(context);
+        std::shared_ptr<AlgoFrame> frame = std::dynamic_pointer_cast<meta::core::AlgoFrame>(context);
 
         if (frame->cvImage.empty()) {
             std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << " queue size: " << input_queue_->Size()<<std::endl;
@@ -60,4 +60,4 @@ void DetectorNode::run() {
 }
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

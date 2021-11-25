@@ -1,7 +1,7 @@
 #include "node/Node.h"
 #include "SolutionPipeline.h"
 
-namespace algo {
+namespace meta {
 namespace vision {
 void Node::init() {
     QueueManager::SafeGet(next_node_name_, output_queue_);
@@ -13,4 +13,4 @@ void Node::init() {
 }
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

@@ -9,15 +9,15 @@
 #include "mgr/QueueManager.h"
 #include "util.h"
 
-using namespace algo::core;
+using namespace meta::core;
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 void MonitorNode::init() {
     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<"MonitorNode init  and get queue"<<std::endl;
     QueueManager::SafeGet(node_name_, input_queue_);
-    QueueManager::SafeGet(ALGO_NODE_DISPATCH, output_queue_);
+    QueueManager::SafeGet(META_NODE_DISPATCH, output_queue_);
     monitor_interval =
         ConfigureManager::instance()->getAsInt("monitor_interval");
     cur_interval_cnt_ = 0;
@@ -40,7 +40,7 @@ void MonitorNode::run() {
              std::this_thread::sleep_for(std::chrono::milliseconds(10000));
              continue;
          }
-	     std::shared_ptr<algo::vision::AlgoObject> context;
+	     std::shared_ptr<meta::vision::AlgoObject> context;
 	     input_queue_->Pop(context);
 	     std::shared_ptr<AlgoData> message =
 	             std::dynamic_pointer_cast<AlgoData>(context);
@@ -68,4 +68,4 @@ void MonitorNode::SendMsg(std::shared_ptr<AlgoData> message){
 }
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

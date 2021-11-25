@@ -15,9 +15,9 @@
 #include "util.h"
 
 //"NOTE: THE CODE'S VERSION"
-#define ALGO_VERSION "8.0.4.1"
+#define META_VERSION "8.0.4.1"
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 enum class AlgoDeviceType {
@@ -54,7 +54,7 @@ void EnvironmentInit::initOtherComponent() {
 
 void EnvironmentInit::initServiceVariable() {
     // init version
-    gt->sys_path = ConfigureManager::instance()->getAsString(ALGO_SYS_PATH);
+    gt->sys_path = ConfigureManager::instance()->getAsString(META_SYS_PATH);
     std::string version_file = gt->sys_path + "/version";
  
     // init system sn
@@ -66,11 +66,11 @@ void EnvironmentInit::initServiceVariable() {
     // init code version
 
     // todo other sys env
-    // init algo face mqtt topic
+    // init meta face mqtt topic
     // init pad relate configure item.
     // read configure item from local file.
     std::string sys_path =
-        ConfigureManager::instance()->getAsString(ALGO_SYS_PATH);
+        ConfigureManager::instance()->getAsString(META_SYS_PATH);
 
 
 }
@@ -103,7 +103,7 @@ std::vector<std::string> EnvironmentInit::readCameraSnFromFile(
 
 void EnvironmentInit::initDeviceSn() {
     std::string sys_path =
-        ConfigureManager::instance()->getAsString(ALGO_SYS_PATH);
+        ConfigureManager::instance()->getAsString(META_SYS_PATH);
     std::string clientSnFile = sys_path + "/sys_sn";
     std::ifstream fClientSnRead(clientSnFile);
     if (!fClientSnRead) {
@@ -146,4 +146,4 @@ void EnvironmentInit::initModelPlugin() {
 }
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

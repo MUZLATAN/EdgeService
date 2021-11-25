@@ -13,7 +13,7 @@
 #include "node/Node.h"
 #include "util.h"
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 class Node;
@@ -68,4 +68,4 @@ class SolutionPipelineManager
     : public SafeObjectManager<SolutionPipelineManager,
                                std::shared_ptr<SolutionPipeline>> {};
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

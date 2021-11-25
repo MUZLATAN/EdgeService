@@ -10,7 +10,7 @@
 
 #include "Node.h"
 
-namespace algo {
+namespace meta {
 namespace vision {
 template <typename... Targs>
 class NodeFactory {
@@ -115,4 +115,4 @@ class NodeBuild {
     }
 };
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

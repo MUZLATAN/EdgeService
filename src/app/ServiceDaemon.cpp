@@ -15,7 +15,7 @@
 #include "node/DynamicFactory.h"
 #include "node/head.h"
 
-using namespace algo::vision;
+using namespace meta::vision;
 using namespace std::chrono;
 
 

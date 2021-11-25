@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 enum class CONFIGType {
@@ -46,4 +46,4 @@ class ConfigureManager {
 };
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

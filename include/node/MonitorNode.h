@@ -7,12 +7,12 @@
 #include "Node.h"
 #include "common.h"
 
-namespace algo {
+namespace meta {
 namespace vision {
 ;
 class MonitorNode : public Node, DynamicCreator<MonitorNode> {
  public:
-    MonitorNode() : Node(ALGO_NODE_MONITOR) {}
+    MonitorNode() : Node(META_NODE_MONITOR) {}
     virtual ~MonitorNode() {}
     virtual void run();
 
@@ -33,4 +33,4 @@ class MonitorNode : public Node, DynamicCreator<MonitorNode> {
     std::map<std::string, int> cls_id_map;
 };
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

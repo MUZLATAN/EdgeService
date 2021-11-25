@@ -4,11 +4,11 @@
 #include <string>
 #include <vector>
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 extern std::map<std::string, std::vector<std::string>> feature_map;
 
 }	// namespace vision
-}	// namespace algo
+}	// namespace meta
 

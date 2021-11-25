@@ -4,7 +4,7 @@
 
 #include "mgr/QueueManager.h"
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 void DispatchNode::init() {
@@ -21,7 +21,7 @@ void DispatchNode::run() {
             break;
         }
 
-         std::shared_ptr<algo::vision::AlgoObject> message;
+         std::shared_ptr<meta::vision::AlgoObject> message;
          if (input_queue_->Empty()) {
              std::this_thread::sleep_for(std::chrono::milliseconds(5000));
              continue;
@@ -33,4 +33,4 @@ void DispatchNode::run() {
     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << node_name_ << " Exit .......";
 }
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

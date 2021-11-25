@@ -37,7 +37,7 @@ void dump(int sig)
 }
 
 void sig_proc(int sig) {
-    algo::vision::SolutionPipeline::StopAll();
+    meta::vision::SolutionPipeline::StopAll();
     dump(sig);
     _exit(sig);
 }
@@ -90,7 +90,7 @@ int main(int argc, char** argv) {
         signal(SIGXFSZ, sig_proc);  // 超出设定的文件大小限制(4.2 BSD)
     }
 
-    algo::vision::ServiceDaemon app(argc, argv);
+    meta::vision::ServiceDaemon app(argc, argv);
     app.Loop();
     //
     std::this_thread::sleep_until(

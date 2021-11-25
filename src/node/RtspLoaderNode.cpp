@@ -9,12 +9,12 @@
 #include "mgr/QueueManager.h"
 #include "node/DataLoaderNode.h"
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 void RtspLoaderNode::init() {
     // todo
-    QueueManager::SafeGet(ALGO_NODE_DETECT, output_queue_);
+    QueueManager::SafeGet(META_NODE_DETECT, output_queue_);
 
     capture_ = std::make_unique<cv::VideoCapture>(rtsp_stream_addr_);
     capture_->set(cv::CAP_PROP_BUFFERSIZE, 3);
@@ -78,4 +78,4 @@ void RtspLoaderNode::run() {
 }
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

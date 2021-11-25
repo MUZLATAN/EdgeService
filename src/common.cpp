@@ -1,6 +1,6 @@
 #include "common.h"
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 GlobalVariable* GetGlobalVariable(void) {
@@ -9,4 +9,4 @@ GlobalVariable* GetGlobalVariable(void) {
 };
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

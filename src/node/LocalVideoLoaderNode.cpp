@@ -17,10 +17,10 @@
 
 #define VIDEOFORMAT ".mp4"
 
-namespace algo {
+namespace meta {
 namespace vision {
 void LocalVideoLoaderNode::init() {
-    QueueManager::SafeGet(ALGO_NODE_DETECT, output_queue_);
+    QueueManager::SafeGet(META_NODE_DETECT, output_queue_);
 }
 
 void LocalVideoLoaderNode::run() {
@@ -29,7 +29,7 @@ void LocalVideoLoaderNode::run() {
             return;
         }
 
-        auto frame = std::make_shared<algo::core::AlgoFrame>();
+        auto frame = std::make_shared<meta::core::AlgoFrame>();
         capture_->read(frame->cvImage);
 
         frame_id_++;
@@ -46,4 +46,4 @@ void LocalVideoLoaderNode::run() {
 
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

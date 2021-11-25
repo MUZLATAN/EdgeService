@@ -4,7 +4,7 @@
 
 
 #include <string>
-namespace algo {
+namespace meta {
 namespace vision {
 
 bool HttpGet(const char *url, const std::string &value, std::string &re);
@@ -20,4 +20,4 @@ std::string LoadLastHttpSendData(void);
 #endif
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

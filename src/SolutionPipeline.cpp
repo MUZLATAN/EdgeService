@@ -10,18 +10,18 @@
 #define __MAX_IMAGE_QUEUE_SIZE__ 10  
 
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 std::vector<std::string> SolutionPipeline::global_executor_names_ = {
 
-    ALGO_NODE_DISPATCH, ALGO_NODE_FLOWRPC};
+    META_NODE_DISPATCH, META_NODE_FLOWRPC};
 
 std::unordered_map<std::string, std::shared_ptr<Node>>
     SolutionPipeline::global_executors_;
 
 std::vector<std::string> SolutionPipeline::global_core_executor_names_ = {
-    ALGO_NODE_DETECT};
+    META_NODE_DETECT};
 
 std::unordered_map<std::string, std::shared_ptr<Node>>
     SolutionPipeline::global_core_executors_;
@@ -36,7 +36,7 @@ template <typename... Targs>
 static std::shared_ptr<Node> buildNode(std::string& name,
                                                  const std::string& next,
                                                  Targs&&... params) {
-    std::string node_name = "algo::vision::" + name;
+    std::string node_name = "meta::vision::" + name;
     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << " load node: " << node_name<<std::endl;
     auto ptr = NodeBuild::MakeSharedNode(node_name, params...);
 
@@ -51,7 +51,7 @@ static std::shared_ptr<Node> buildNode(std::string& name,
     ptr->setNextNode(next);
 
     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << " this node queue_name: " << name<<std::endl;
-    auto queue = std::make_shared<Queue<std::shared_ptr<algo::vision::AlgoObject>>>(__MAX_IMAGE_QUEUE_SIZE__);
+    auto queue = std::make_shared<Queue<std::shared_ptr<meta::vision::AlgoObject>>>(__MAX_IMAGE_QUEUE_SIZE__);
 
     QueueManager::SafeAdd(name, queue);
     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "  after this node queue_name: " << name<<std::endl;
@@ -68,7 +68,7 @@ void SolutionPipeline::Build() {
             next = solution_process_vec[i + 1];
         } else {
             std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "solution last node: " << solution_process_vec[i]<<std::endl;
-            next = ALGO_NODE_DISPATCH;
+            next = META_NODE_DISPATCH;
         }
 
         auto ptr = buildNode(solution_process_vec[i], next);
@@ -93,21 +93,21 @@ void SolutionPipeline::BuildVideoInput() {
         // todo may be local video file
         if ((*iter).find("rtsp") != (*iter).npos) {
             // rtsp
-            data_loader_name = ALGO_NODE_RTSP;
+            data_loader_name = META_NODE_RTSP;
         } else if ((*iter).find("/dev") != (*iter).npos) {
             // usb
-            data_loader_name = ALGO_NODE_USBCAMERA;
+            data_loader_name = META_NODE_USBCAMERA;
 
         } else if ((*iter).find("rtmp") != (*iter).npos) {
             // rtmp
             std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "build rtmp input."<<std::endl;
         } else {
             // local video file
-            data_loader_name = ALGO_NODE_LOCALVIDEO;
+            data_loader_name = META_NODE_LOCALVIDEO;
         }
 
         auto ptr =
-            buildNode(data_loader_name, ALGO_NODE_DETECT, *iter);
+            buildNode(data_loader_name, META_NODE_DETECT, *iter);
         ptr->init();
         global_video_input_executors_[*iter] = ptr;
     }
@@ -116,7 +116,7 @@ void SolutionPipeline::BuildVideoInput() {
 void SolutionPipeline::BuildAndStartCoreGlobal() {
     for (auto iter = global_core_executor_names_.begin();
          iter != global_core_executor_names_.end(); iter++) {
-        std::string node_name = "algo::vision::" + (*iter);
+        std::string node_name = "meta::vision::" + (*iter);
         std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << " core node: " << node_name<<std::endl;
 
         std::string next;
@@ -124,7 +124,7 @@ void SolutionPipeline::BuildAndStartCoreGlobal() {
 
         global_core_executors_[*iter] = ptr;
 
-        if (*iter == ALGO_NODE_DETECT) {
+        if (*iter == META_NODE_DETECT) {
             // set next node
         }
 
@@ -163,7 +163,7 @@ void SolutionPipeline::BuildAndStartGlobal() {
 
     // init global callback function
     auto node =
-        SolutionPipeline::global_executors_[ALGO_NODE_FLOWRPC];
+        SolutionPipeline::global_executors_[META_NODE_FLOWRPC];
     FlowRpcAsynNode_flow =
         dynamic_cast<FlowRpcAsynNode*>(node.get());
 }
@@ -199,4 +199,4 @@ void SolutionPipeline::StartVideoInput() {
     }
 }
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

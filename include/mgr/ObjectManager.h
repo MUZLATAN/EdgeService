@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <iostream>
 
-namespace algo {
+namespace meta {
 namespace vision {
 template <typename M, typename T, typename K = std::string>
 class ObjectManager : public std::unordered_map<K, T> {
@@ -284,4 +284,4 @@ class SafeObjectManager : public ObjectManager<M, T, K> {
 	std::mutex my_mutex;
 };
 }	 // namespace vision
-}	 // namespace algo
+}	 // namespace meta

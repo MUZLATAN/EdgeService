@@ -8,7 +8,7 @@
 #include "AlgoObject.h"
 #include "mgr/ConfigureManager.h"
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 enum class EventType {
@@ -81,4 +81,4 @@ class MonitorEvent : public Event {
 };
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

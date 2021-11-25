@@ -11,13 +11,13 @@
 #define  SEPARATION "#&&#"
 
 
-namespace algo {
+namespace meta {
 namespace vision {
 
 class FlowRpcAsynNode : public Node,
                              DynamicCreator<FlowRpcAsynNode> {
  public:
-    explicit FlowRpcAsynNode() : Node(ALGO_NODE_FLOWRPC){
+    explicit FlowRpcAsynNode() : Node(META_NODE_FLOWRPC){
        loop_times = 5;
        count_successfully = 0;
        count_failed = 0;
@@ -80,4 +80,4 @@ class FlowRpcAsynNode : public Node,
 extern FlowRpcAsynNode* FlowRpcAsynNode_flow;
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

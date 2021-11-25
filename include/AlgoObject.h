@@ -1,6 +1,6 @@
 #pragma once
 	
-namespace algo{
+namespace meta{
 namespace vision{
 	
 	class AlgoObject{
@@ -17,5 +17,5 @@ namespace vision{
 	    **/
 	    int obj_type;
 	};
-}//algo
+}//meta
 }//vision

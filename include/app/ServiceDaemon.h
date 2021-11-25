@@ -6,7 +6,7 @@
 
 #include "init.h"
 
-namespace algo {
+namespace meta {
 namespace vision {
 class ServiceDaemon {
  public:
@@ -23,4 +23,4 @@ class ServiceDaemon {
 };
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta

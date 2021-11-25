@@ -12,7 +12,7 @@
 #include "mgr/ConfigureManager.h"
 #include "network/HttpClient.h"
 
-namespace algo {
+namespace meta {
 namespace vision {
 FlowRpcAsynNode* FlowRpcAsynNode_flow;
 
@@ -328,4 +328,4 @@ void FlowRpcAsynNode::dump(){
 }
 
 }  // namespace vision
-}  // namespace algo
+}  // namespace meta
