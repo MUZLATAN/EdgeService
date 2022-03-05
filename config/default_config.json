@@ -1,0 +1,9 @@
+{
+  "feature": [
+    "monitor"
+  ],
+  "data_input": [
+    "rtsp://admin:admin@192.168.8.69:554/0"
+  ],
+  "sys_path": "../FLOW"
+}

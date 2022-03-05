@@ -21,7 +21,7 @@ void DispatchNode::run() {
             break;
         }
 
-         std::shared_ptr<meta::vision::AlgoObject> message;
+         std::shared_ptr<meta::vision::MetaObject> message;
          if (input_queue_->Empty()) {
              std::this_thread::sleep_for(std::chrono::milliseconds(5000));
              continue;

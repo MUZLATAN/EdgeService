@@ -26,9 +26,9 @@ std::vector<std::string> SolutionPipeline::global_core_executor_names_ = {
 std::unordered_map<std::string, std::shared_ptr<Node>>
     SolutionPipeline::global_core_executors_;
 
-std::vector<std::string> SolutionPipeline::global_video_input_;
+std::vector<std::string> SolutionPipeline::global_data_input_;
 std::unordered_map<std::string, std::shared_ptr<Node>>
-    SolutionPipeline::global_video_input_executors_;
+    SolutionPipeline::global_data_input_executors_;
 
 std::vector<std::shared_ptr<std::thread>> SolutionPipeline::vec_thread;
 
@@ -51,7 +51,7 @@ static std::shared_ptr<Node> buildNode(std::string& name,
     ptr->setNextNode(next);
 
     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << " this node queue_name: " << name<<std::endl;
-    auto queue = std::make_shared<Queue<std::shared_ptr<meta::vision::AlgoObject>>>(__MAX_IMAGE_QUEUE_SIZE__);
+    auto queue = std::make_shared<Queue<std::shared_ptr<meta::vision::MetaObject>>>(__MAX_IMAGE_QUEUE_SIZE__);
 
     QueueManager::SafeAdd(name, queue);
     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "  after this node queue_name: " << name<<std::endl;
@@ -79,16 +79,16 @@ void SolutionPipeline::Build() {
 
 void SolutionPipeline::BuildVideoInput() {
     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "build video input."<<std::endl;
-    global_video_input_ =
-        ConfigureManager::instance()->getAsVectorString("video_input");
+    global_data_input_ =
+        ConfigureManager::instance()->getAsVectorString("data_input");
 
-    if (global_video_input_.size() < 1) {
+    if (global_data_input_.size() < 1) {
         std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << " solution don't assigin video/rtst stream."<<std::endl;
         // todo log to chunnel
     }
 
-    for (auto iter = global_video_input_.begin();
-         iter != global_video_input_.end(); ++iter) {
+    for (auto iter = global_data_input_.begin();
+         iter != global_data_input_.end(); ++iter) {
         std::string data_loader_name;
         // todo may be local video file
         if ((*iter).find("rtsp") != (*iter).npos) {
@@ -109,7 +109,7 @@ void SolutionPipeline::BuildVideoInput() {
         auto ptr =
             buildNode(data_loader_name, META_NODE_DETECT, *iter);
         ptr->init();
-        global_video_input_executors_[*iter] = ptr;
+        global_data_input_executors_[*iter] = ptr;
     }
 }
 
@@ -184,8 +184,8 @@ void SolutionPipeline::Start() {
 void SolutionPipeline::StopAll() { GetGlobalVariable()->sys_quit = true; }
 
 void SolutionPipeline::StartVideoInput() {
-    for (auto iter = global_video_input_executors_.begin();
-         iter != global_video_input_executors_.end(); ++iter) {
+    for (auto iter = global_data_input_executors_.begin();
+         iter != global_data_input_executors_.end(); ++iter) {
         std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "video input thread start: "
                   << iter->second->getNodeName()<<std::endl;
         int idx = GetGlobalVariable()->g_thread.size();

@@ -4,9 +4,10 @@
 #include <opencv2/opencv.hpp>
 #include <string>
 #include <vector>
-#include <AlgoObject.h>
+#include <MetaObject.h>
 #include <memory>
 #include <thread>
+#include <stdarg.h>
 
 #define META_SYS_PATH "sys_path"        // system path
 #define ROOTPATH "../"
@@ -14,11 +15,19 @@
 // NOTE: storage for node name
 #define META_NODE_MONITOR "MonitorNode"
 #define META_NODE_DETECT "DetectorNode"
+#define META_NODE_USBCAMERA ""
 #define META_NODE_DISPATCH "DispatchNode"
 #define META_NODE_RTSP "RtspLoaderNode"
 #define META_NODE_LOCALVIDEO "LocalVideoLoaderNode"
 #define META_NODE_FLOWRPC "FlowRpcAsynNode"
 
+
+#define MAX_LOG_MSG_LEN (1023)
+#define TIME_FORMAT_STR_LEN (20)
+
+void log_func(const char* time, const char *file, const int line, const char *fmt, ...);
+
+#define LOG_I(fmt, ...) log_func(__TIMESTAMP__ ,__FILE__, __LINE__, fmt, ##__VA_ARGS__)
 
 #ifndef __TYPEDEFINE_META_FRAME__
 #define __TYPEDEFINE_META_FRAME__
@@ -48,7 +57,7 @@ typedef struct Box {
 enum CategoryId { cls_face = 2, cls_head = 3, cls_ped = 1 };
 
 
-class BaseFrame : public meta::vision::AlgoObject {
+class BaseFrame : public meta::vision::MetaObject {
  public:
     BaseFrame() { 
         setCurrentTime(); 
@@ -85,7 +94,7 @@ class BaseFrame : public meta::vision::AlgoObject {
         std::shared_ptr<BaseFrame> frame_ = std::make_shared<BaseFrame>(*this);
         cv::Mat tmp;
         tmp = cvImage(rect);
-        cv::resize(tmp, frame_->cvImage, dsize);
+        // cv::resize(tmp, frame_->cvImage, dsize);
         return frame_;
     };
 
@@ -110,12 +119,12 @@ typedef BaseFrame AlgoFrame;
 namespace meta {
 namespace vision {
 
-class AlgoData : public AlgoObject{
+class MetaData : public MetaObject{
  public:
-    AlgoData(){
+    MetaData(){
         obj_type = 2;
     };
-    AlgoData(std::vector<meta::core::Box>& boxes,
+    MetaData(std::vector<meta::core::Box>& boxes,
               std::shared_ptr<meta::core::AlgoFrame> frame)
         : object_boxes(boxes), frame_(frame){
             obj_type = 2;
@@ -134,7 +143,7 @@ struct GlobalVariable {
     std::string sys_path = "";
     std::string client_sn = "";
     std::string camera_sns = "";    // Maybe multiple
-    std::string video_inputs = "";  // Maybe multiple
+    std::string data_inputs = "";  // Maybe multiple
 
     bool sys_quit = false;
 

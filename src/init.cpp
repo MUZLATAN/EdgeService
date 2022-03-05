@@ -124,12 +124,12 @@ void EnvironmentInit::initDeviceSn() {
     if (camera_sn_vec.size() > 0) gt->camera_sns = camera_sn_vec[0];
 
     std::vector<std::string> device_name_vec =
-        ConfigureManager::instance()->getAsVectorString("video_input");
+        ConfigureManager::instance()->getAsVectorString("data_input");
     for (size_t i = 0; i < device_name_vec.size(); ++i) {
         if (camera_sn_vec.size() >= i + 1) {
             std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << device_name_vec[i] << " <-rtsp/usb, : sn->"
                       << camera_sn_vec[i]<<std::endl;
-            gt->video_inputs = device_name_vec[i];
+            gt->data_inputs = device_name_vec[i];
             // ServiceVariableManager::Add(device_name_vec[i],
             // camera_sn_vec[i]);
         }

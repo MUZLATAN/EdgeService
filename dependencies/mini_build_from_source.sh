@@ -8,6 +8,7 @@ PLATFORM="x86"
 CUR_PATH=`pwd`
 # 输出平台目录
 x86_LIB_PATH="x86"
+HISI_LIB_PATH="hisi"
 
 # 源码存放目录
 SRC_PATH="${CUR_PATH}/src"
@@ -25,6 +26,9 @@ declare -A LIB_VERSIONS=(
 # 地址
 declare -A LIB_URLS=( 
     ["opencv"]="https://gitee.com/mirrors/opencv.git"
+    ["ffmpeg"]="https://ffmpeg.org/releases/ffmpeg-3.4.9.tar.gz"
+    # ["rknn"]="https://codeload.github.com/rockchip-linux/rknpu/zip/refs/heads/master"
+    ["jsoncpp"]="https://codeload.github.com/open-source-parsers/jsoncpp/tar.gz/refs/tags/1.8.3"
 )
 
 
@@ -51,6 +55,11 @@ setup()
     if [ $PLATFORM = "x86" ];
     then
         makedir "${x86_LIB_PATH}"
+    fi        
+    
+    if [ $PLATFORM = "hisi"]
+    then
+        makedir "${LIB_PATH}/${HISI_LIB_PATH}"
     fi
 
     apt-get install -y libtool
@@ -110,39 +119,76 @@ download_all()
     done
     cd ..
 }
-
-build_opencv()
+build_rknn()
 {
-    cd ${SRC_PATH}/opencv
-    if [ -d build ]; then
-        rm -rf build
+    echo "================ Build rknn ================"
+    cd ${SRC_PATH}
+    cp -rf ./rknn ${INSTALL_DIR}/
+    cd ${CUR_PATH}
+}
+# ================ FFMpeg ================
+build_ffmpeg()
+{
+    cd ${SRC_PATH}/ffmpeg
+    if [[ ${BUILD_PLATFORM} == "rk" ]];
+    then
+        cd ${SRC_PATH}
+        if [ -d ffmpeg ];
+        then
+            rm -r ffmpeg
+        fi
+
+        wget -c https://whale-cv-video.oss-cn-hangzhou.aliyuncs.com/ffmpeg_rkmpp.tar.gz
+        tar zxf ffmpeg_rkmpp.tar.gz
+        cp -rf ffmpeg ${INSTALL_DIR}
+
+        FFMEPG_LIB_PATH=${INSTALL_DIR}/ffmpeg/lib
+        FFMPEG_PKG_PATH=${INSTALL_DIR}/ffmpeg/lib/pkgconfig
+    elif [[ ${BUILD_PLATFORM} == "hisi" ]];
+    then
+        ./configure --prefix=${INSTALL_DIR}/ffmpeg --pkg-config=pkg-config --enable-version3 --enable-ffmpeg --enable-static --enable-pic --disable-ffplay --disable-ffprobe --disable-doc --disable-htmlpages --disable-podpages --disable-txtpages --cross-prefix=${COMPILER_PREFIX} --target-os=linux --enable-cross-compile --arch=arm --enable-nonfree --enable-gpl --enable-lto
+        make -j$(nproc)
+        make install
+        FFMEPG_LIB_PATH=${INSTALL_DIR}/ffmpeg/lib
+        FFMPEG_PKG_PATH=${INSTALL_DIR}/ffmpeg/lib/pkgconfig
+    else
+        export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:${INSTALL_DIR}/x264/lib/pkgconfig:${INSTALL_DIR}/x265/lib/pkgconfig:${INSTALL_DIR}/rk_mpp/lib/pkgconfig"
+        ./configure --enable-version3 --enable-gpl --enable-rkmpp --enable-nonfree --enable-libx264  --enable-ffmpeg --enable-static --enable-pic --enable-lto --disable-ffplay --disable-ffprobe --disable-doc --disable-htmlpages --disable-podpages --disable-txtpages --cross-prefix=${COMPILER_PREFIX} --target-os=linux --enable-cross-compile --arch=arm --enable-nonfree --enable-gpl --extra-cflags="-I${INSTALL_DIR}/x264/include -I${INSTALL_DIR}/x265/include -I${INSTALL_DIR}/rk_mpp/include -I/opt/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/arm-linux-gnueabihf/libc/usr/include/drm" \
+        --extra-ldflags="-L${INSTALL_DIR}/x264/lib -L${INSTALL_DIR}/x265/lib -L${INSTALL_DIR}/rk_mpp/lib -L/opt/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf/arm-linux-gnueabihf/libc/usr/lib"
+        make -j$(nproc)
+        make install
+        FFMEPG_LIB_PATH=${INSTALL_DIR}/ffmpeg/lib
+        FFMPEG_PKG_PATH=${INSTALL_DIR}/ffmpeg/lib/pkgconfig
     fi
-    mkdir -p build
-    cd build
-#    cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}/opencv ${COMPILER} -DAR=${AR} -DRANLIB=${RANLIB} -DBUILD_LIST="core,imgproc,highgui,imgcodecs,videoio,video,calib3d,features2d" -DBUILD_SHARED_LIBS=OFF -DBUILD_opencv_apps=OFF -DOPENCV_FORCE_3RDPARTY_BUILD=OFF -DWITH_GTK=OFF -DWITH_IPP=OFF -DBUILD_TESTS=OFF -DWITH_1394=OFF -DBUILD_opencv_apps=OFF -DWITH_ITT=OFF -DBUILD_ZLIB=ON -DWITH_TIFF=OFF -DWITH_JASPER=OFF -DWITH_OPENEXR=OFF -DWITH_WEBP=OFF -DCMAKE_CXX_FLAGS="-DCVAPI_EXPORTS" ..
-    cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}/opencv ${COMPILER}  -DBUILD_LIST="core,imgproc,highgui,imgcodecs,videoio,video,calib3d,features2d" -DBUILD_SHARED_LIBS=ON -DBUILD_TESTS=OFF -DWITH_IPP=OFF ..
-    make -j2
-    make install
-
-
-    cp -r ${INSTALL_DIR}/opencv/include/* ${INSTALL_DIR}/include
-    cp -r ${INSTALL_DIR}/opencv/lib/* ${INSTALL_DIR}/lib
-    rm -rf ${INSTALL_DIR}/opencv
+    
     cd ${CUR_PATH}
 }
 
-
-
-# ================ Tengine ================
-build_tengine()
+build_jsoncpp()
 {
-    cd ${SRC_PATH}/tengine
-    mkdir -p build 
+    
+    cd ${SRC_PATH}/
+    tar -zvxf 1.8.3 
+    cd jsoncpp-1.8.3
+    sed -i "5s/ENABLE_TESTING()/# ENABLE_TESTING()/g" ./CMakeLists.txt
+    sed -i "7s/ ON/ OFF/g" ./CMakeLists.txt
+    sed -i "8s/ ON/ OFF/g" ./CMakeLists.txt
+    sed -i "53s/std::snprintf/snprintf/g" ./src/lib_json/json_writer.cpp
+    sed -i "61s/std::snprintf/snprintf/g" ./src/lib_json/json_writer.cpp
+    sed -i "27s/std::snprintf/snprintf/g" ./src/lib_json/json_reader.cpp
+    sed -i "35s/std::snprintf/snprintf/g" ./src/lib_json/json_reader.cpp
+
+    mkdir -p build
     cd ./build
-    cmake -DCMAKE_TOOLCHAIN_FILE=../toolchains/aarch64-linux-gnu.toolchain.cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}/tengine -DTENGINE_BUILD_BENCHMARK=OFF -DTENGINE_BUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE=release ${COMPILER} ..
+
+    cmake ${COMPILER}                                   \
+        -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}/jsoncpp   \
+    ..
+
     make -j$(nproc) & make install
     cd ${CUR_PATH}
 }
+
 
 # 构建: RK
 build_for_x86()
@@ -170,9 +216,79 @@ build_for_x86()
     echo "================ Build for x86 DONE ================"
 }
 
+# 构建: RV
+build_for_rv()
+{
+    echo "================ Build for RV ================"
+    INSTALL_DIR="${CUR_PATH}/${LIB_PATH}/${RV_LIB_PATH}"
+    COMPILER_PREFIX="arm-linux-gnueabihf-"
+    C_COMPILER="${COMPILER_PREFIX}gcc"
+    CXX_COMPILER="${COMPILER_PREFIX}c++"
+    CC=${COMPILER_PREFIX}gcc 
+    CXX=${COMPILER_PREFIX}g++
+    LD="${COMPILER_PREFIX}ld"
+    AR="${COMPILER_PREFIX}ar"
+    RANLIB="${COMPILER_PREFIX}ranlib"
+    COMPILER="-DCMAKE_C_COMPILER=${C_COMPILER} -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DRANDLIB=${RANDLIB}"
+    BUILD_PLATFORM="rv"
+    HOST_SYSTEM_NAME="linux-generic32"
+    CONFIGURE_HOST="arm-none-linux"
+    TOOLCHAIN_ROOT="$(dirname `which ${C_COMPILER}`)/../"
+    TOOLCHAIN_INCLUDE="${TOOLCHAIN_ROOT}/include"
+    TOOLCHAIN_LIB="${TOOLCHAIN_ROOT}/lib"
+    CPU="cortex-a7"
+    FPU="neon"
+    CMAKE_SYSTEM_PROCESSOR="armv7-a_hardfp"
+
+    export LD_LIBRARY_PATH=
+
+    rm -rf ${SRC_PATH}
+    # download_all
+    
+
+    build_opencv
+    # build_rknn
+    # build_jsoncpp
+
+    echo "================ Build for RV DONE ================"
+}
+
+# 构建：海思
+build_for_hisi()
+{
+    echo "================ Build for hisi ================"
+    INSTALL_DIR="${CUR_PATH}/${LIB_PATH}/${HISI_LIB_PATH}/${BUILD_TYPE}"
+    COMPILER_PREFIX="arm-himix200-linux-"
+    C_COMPILER="${COMPILER_PREFIX}gcc"
+    CXX_COMPILER="${COMPILER_PREFIX}g++"
+    LD="${COMPILER_PREFIX}ld"
+    AR="${COMPILER_PREFIX}ar"
+    RANDLIB="${COMPILER_PREFIX}randlib"
+    COMPILER="-DCMAKE_C_COMPILER=${C_COMPILER} -DCMAKE_CXX_COMPILER=${CXX_COMPILER} -DRANDLIB=${RANDLIB}"
+    BUILD_PLATFORM="hisi"
+    HOST_SYSTEM_NAME="linux-generic32"
+    CONFIGURE_HOST="arm-none-linux"
+    TOOLCHAIN_ROOT="$(dirname `which ${C_COMPILER}`)/../arm-linux-gnueabi"
+    TOOLCHAIN_INCLUDE="${TOOLCHAIN_ROOT}/include"
+    TOOLCHAIN_LIB="${TOOLCHAIN_ROOT}/lib"
+    CPU="cortex-a7"
+    FPU="neon"
+
+    export LD_LIBRARY_PATH=
+    download_all
+    build_ffmpeg
+    build_opencv
+    # build_rknn
+    # build_jsoncpp
+
+
+    echo "================ Build for hisi DONE ================"
+}
+
 setup
-download_all
-build_for_x86
+# download_all
+# build_for_x86
+build_for_hisi
 
 #rm -rf src
 

@@ -40,10 +40,10 @@ void MonitorNode::run() {
              std::this_thread::sleep_for(std::chrono::milliseconds(10000));
              continue;
          }
-	     std::shared_ptr<meta::vision::AlgoObject> context;
+	     std::shared_ptr<meta::vision::MetaObject> context;
 	     input_queue_->Pop(context);
-	     std::shared_ptr<AlgoData> message =
-	             std::dynamic_pointer_cast<AlgoData>(context);
+	     std::shared_ptr<MetaData> message =
+	             std::dynamic_pointer_cast<MetaData>(context);
 	
 
          std::this_thread::sleep_for(std::chrono::milliseconds (5000));
@@ -56,7 +56,7 @@ void MonitorNode::run() {
     }
     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << node_name_ << " exit ......."<<std::endl;
 }
-void MonitorNode::SendMsg(std::shared_ptr<AlgoData> message){
+void MonitorNode::SendMsg(std::shared_ptr<MetaData> message){
     std::vector<int> x_ {1, 2, 3};
     std::vector<int> y_ {4, 6,8};
     std::vector<int> id_{7, 8, 9};

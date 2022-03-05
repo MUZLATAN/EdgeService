@@ -34,7 +34,7 @@ void DetectorNode::run() {
             break;
         }
 
-        std::shared_ptr<meta::vision::AlgoObject> context;
+        std::shared_ptr<meta::vision::MetaObject> context;
         if (input_queue_->Empty()){
             std::this_thread::sleep_for(std::chrono::seconds(5));
             continue;
@@ -53,7 +53,7 @@ void DetectorNode::run() {
         std::shared_ptr<Event> ent = std::make_shared<LoggerEvent>(frame->camera_sn, frame->camera_time);
         output_queue_->Push(ent);
 
-        std::shared_ptr<AlgoData>data = std::make_shared<AlgoData>(object_boxes, frame);
+        std::shared_ptr<MetaData>data = std::make_shared<MetaData>(object_boxes, frame);
         for (auto& kv : next_node_unit_) kv.second->Push(data);
     }
     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << node_name_ << " exit ......."<<std::endl;

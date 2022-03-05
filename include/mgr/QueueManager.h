@@ -6,7 +6,7 @@
 #include <queue>
 
 #include "mgr/ObjectManager.h"
-#include "AlgoObject.h"
+#include "MetaObject.h"
 
 namespace meta {
 namespace vision {
@@ -44,12 +44,12 @@ class Queue {
 };
 
 template <>
-class Queue<std::shared_ptr<meta::vision::AlgoObject>> {
+class Queue<std::shared_ptr<meta::vision::MetaObject>> {
  public:
     Queue(int size, bool wait = true) : wait_(wait), cap_(size) {
-        queue_impl_ = std::make_unique<std::queue<std::shared_ptr<meta::vision::AlgoObject>>>();
+        queue_impl_ = std::make_unique<std::queue<std::shared_ptr<meta::vision::MetaObject>>>();
     }
-    bool Push(std::shared_ptr<meta::vision::AlgoObject>&& t, bool block = true) {
+    bool Push(std::shared_ptr<meta::vision::MetaObject>&& t, bool block = true) {
         if (Size() >= cap_) {
             // todo default lost some data.
             //  std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << " this queue is full, now lost it.... " ;
@@ -58,7 +58,7 @@ class Queue<std::shared_ptr<meta::vision::AlgoObject>> {
         queue_impl_->push(t);
         return true;
     }
-    bool Pop(std::shared_ptr<meta::vision::AlgoObject>& t, bool block = true) {
+    bool Pop(std::shared_ptr<meta::vision::MetaObject>& t, bool block = true) {
         t = queue_impl_->front();
         queue_impl_->pop();
         return true;
@@ -71,9 +71,9 @@ class Queue<std::shared_ptr<meta::vision::AlgoObject>> {
  private:
     bool wait_;
     int cap_;
-    std::unique_ptr<std::queue<std::shared_ptr<meta::vision::AlgoObject>>> queue_impl_;
+    std::unique_ptr<std::queue<std::shared_ptr<meta::vision::MetaObject>>> queue_impl_;
 };
-using QueuePtr = std::shared_ptr<Queue<std::shared_ptr<meta::vision::AlgoObject>>>;
+using QueuePtr = std::shared_ptr<Queue<std::shared_ptr<meta::vision::MetaObject>>>;
 
 class QueueManager : public SafeObjectManager<QueueManager, QueuePtr> {};
 }  // namespace vision

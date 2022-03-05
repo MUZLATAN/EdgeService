@@ -5,7 +5,7 @@
 #include <json/json.h>
 
 #include "common.h"
-#include "AlgoObject.h"
+#include "MetaObject.h"
 #include "mgr/ConfigureManager.h"
 
 namespace meta {
@@ -17,7 +17,7 @@ enum class EventType {
     kMonitorEvent
 };
 
-class Event : public AlgoObject{
+class Event : public MetaObject{
  public:
     template <typename... Type>
     Event(Type &&... value) {

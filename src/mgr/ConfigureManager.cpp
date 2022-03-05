@@ -33,7 +33,7 @@ ConfigureManager* ConfigureManager::instance(CONFIGType type) {
 }
 ConfigureManager::ConfigureManager() {
     config_path = ROOTPATH;
-    config_path += "config/service_default.json";
+    config_path += "config/default_config.json";
     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << config_path;
 };
 void ConfigureManager::init() {

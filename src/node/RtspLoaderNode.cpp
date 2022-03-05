@@ -31,19 +31,19 @@ void RtspLoaderNode::reopenCamera() {
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "******Trying to reconnect rtsp camera now****";
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "******Trying to reconnect rtsp camera now****"<<std::endl;
 
         bool opened = capture_->open(rtsp_stream_addr_);
 
         if (!capture_->isOpened()) {
             std::this_thread::sleep_for(std::chrono::seconds(1));
-            continue;
+            // continue;
         }
 
         cv::Mat frame;
         capture_->read(frame);
         if (frame.empty()) {
-            std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "opened: " << frame.cols << " " << frame.rows;
+            std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "opened: " << frame.cols << " " << frame.rows<<std::endl;
             continue;
         }
         is_ready_ = true;

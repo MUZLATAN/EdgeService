@@ -19,7 +19,7 @@ class MonitorNode : public Node, DynamicCreator<MonitorNode> {
     virtual void init();
 
  private:
-   void SendMsg(std::shared_ptr<AlgoData> message);
+   void SendMsg(std::shared_ptr<MetaData> message);
 
 
  private:

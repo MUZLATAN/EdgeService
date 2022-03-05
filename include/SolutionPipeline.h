@@ -52,9 +52,9 @@ class SolutionPipeline {
     static std::vector<std::string> global_executor_names_;
     static std::unordered_map<std::string, std::shared_ptr<Node>>
         global_executors_;
-    static std::vector<std::string> global_video_input_;
+    static std::vector<std::string> global_data_input_;
     static std::unordered_map<std::string, std::shared_ptr<Node>>
-        global_video_input_executors_;
+        global_data_input_executors_;
 
     // build seq
     static std::vector<std::string> global_core_executor_names_;

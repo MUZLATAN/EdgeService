@@ -10,3 +10,4 @@ dependencies/x86/include/opencv*
 dependencies/x86/lib/libopencv*
 dependencies/x86/lib/pkgconfig*
 dependencies/src/opencv*
+dependencies/*
