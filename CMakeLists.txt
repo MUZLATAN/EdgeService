@@ -3,12 +3,13 @@ cmake_minimum_required(VERSION 3.0)
 
 
 # add_definitions(-w) # close warning
+include(cmake/${ARCH}.cmake)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-include(cmake/${ARCH}.cmake)
+
 
 set(CMAKE_VERBOSE_MAKEFILE  ON)
 # enable_testing()
@@ -27,21 +28,20 @@ list(   APPEND
         opencv_video
         opencv_videoio #hisi平台用于本地读取视频测试
         opencv_imgcodecs
-
         opencv_imgproc
         opencv_core
         libjpeg-turbo
-
         libpng
         zlib
-
         dl
         jsoncpp
 )
 
 if (ARCH STREQUAL "x86")
-        include_directories(${CMAKE_CURRENT_LIST_DIR}/dependencies/x86/include/)
-        link_directories(${CMAKE_CURRENT_LIST_DIR}/dependencies/x86/lib)
+        include_directories(${CMAKE_CURRENT_LIST_DIR}/dependencies/x86/jsoncpp/include
+                            ${CMAKE_CURRENT_LIST_DIR}/dependencies/x86/opencv/include)
+        link_directories(${CMAKE_CURRENT_LIST_DIR}/dependencies/x86/jsoncpp/lib
+                         ${CMAKE_CURRENT_LIST_DIR}/dependencies/x86/opencv/lib)
         add_definitions("-D__PLATFORM_X86__")
 
 elseif(ARCH STREQUAL "hisi")
@@ -73,9 +73,9 @@ aux_source_directory(${CMAKE_SOURCE_DIR}/src/app META_SRC)
 
 
 # 编译modules
-add_subdirectory(${CMAKE_SOURCE_DIR}/modules/)
-include_directories(${CMAKE_SOURCE_DIR}/modules/infer_engine/include)
-list(APPEND MODULE_LIBS infer_engine)
+# add_subdirectory(${CMAKE_SOURCE_DIR}/modules/)
+# include_directories(${CMAKE_SOURCE_DIR}/modules/infer_engine/include)
+# list(APPEND MODULE_LIBS infer_engine)
 
 
 set(BIN META)

@@ -35,22 +35,18 @@ void DetectorNode::run() {
         }
 
         std::shared_ptr<meta::vision::MetaObject> context;
-        if (input_queue_->Empty()){
-            std::this_thread::sleep_for(std::chrono::seconds(5));
-            continue;
-        }
+
         input_queue_->Pop(context);
         std::shared_ptr<AlgoFrame> frame = std::dynamic_pointer_cast<meta::core::AlgoFrame>(context);
 
         if (frame->cvImage.empty()) {
             std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << " queue size: " << input_queue_->Size()<<std::endl;
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            std::this_thread::sleep_for(std::chrono::milliseconds(2));
             continue;
         }
         //可以注释
-        std::this_thread::sleep_for(std::chrono::seconds(5));
         std::vector<Box> object_boxes;
-        std::shared_ptr<Event> ent = std::make_shared<LoggerEvent>(frame->camera_sn, frame->camera_time);
+        std::shared_ptr<Event> ent = std::make_shared<LoggerEvent>("", 1648804066659);
         output_queue_->Push(ent);
 
         std::shared_ptr<MetaData>data = std::make_shared<MetaData>(object_boxes, frame);

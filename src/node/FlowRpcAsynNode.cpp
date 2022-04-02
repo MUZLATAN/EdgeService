@@ -112,7 +112,7 @@ void FlowRpcAsynNode::run() {
         std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<"flow rpc"<<std::endl;
 
         if (m_queue.empty()){
-            std::this_thread::sleep_for(std::chrono::seconds(5));
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
             continue;
         }
         m_qlock.lock();
@@ -128,7 +128,7 @@ void FlowRpcAsynNode::run() {
                 success_flag=true;
                 break;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
         }
         
 
@@ -166,9 +166,6 @@ void FlowRpcAsynNode::run() {
             std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<"m_faile_queue size is greater than 5!!! save in file and m_faile_queue size is: "<<m_fail_queue.size()<<name<<std::endl;
             m_fqlock.unlock();
         }
-
-
-        
     }
 }
 
@@ -236,6 +233,7 @@ void FlowRpcAsynNode::MoveData() {
 
             //读本地文件 files 按时间升序 排列 ,第一个即历史最久的文件
             if (files.size() > 0){
+                m_qlock.lock();
 
                 auto top = files.front();
                 std::ifstream in(top.first);
@@ -244,9 +242,9 @@ void FlowRpcAsynNode::MoveData() {
                 std::string str = oss.str();
                 std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<str<<std::endl;
                 //将str分开存入m_queuue
-                m_qlock.lock();
+
                 Split(str);
-                m_qlock.unlock();
+
                 //从维护的vector 中删除记录
                 files.erase(files.begin());
                 std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<files.begin()->first<<std::endl;
@@ -257,6 +255,8 @@ void FlowRpcAsynNode::MoveData() {
                 if(::remove(top.first.c_str())!=0){
                     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<"delete file failed!"<<std::endl;
                 }
+
+                m_qlock.unlock();
             }
             success_flag = false;
         }
@@ -311,7 +311,7 @@ void FlowRpcAsynNode::dump(){
     if (!m_queue.empty()){
         std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<"m_queue not empty!"<<std::endl;
         while(m_queue.size()> 0){
-            ofs<<m_queue.front()<<SEPARATION;
+            ofs<<m_queue.front()<<"\n";
             m_queue.pop();
         }
     }
@@ -320,7 +320,7 @@ void FlowRpcAsynNode::dump(){
     if (!m_fail_queue.empty()){
         std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<"m_fail_queue not empty"<<std::endl;
         while(m_fail_queue.size() > 0){
-            ofs<<m_fail_queue.front()<<SEPARATION;
+            ofs<<m_fail_queue.front()<<"\n";
             m_fail_queue.pop();
         }
     }

@@ -34,19 +34,12 @@ void MonitorNode::run() {
         if (gt->sys_quit) {
             break;
         }
+        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << node_name_ << " run ..."<<std::endl;
 
-         if (input_queue_->Empty())
-         {
-             std::this_thread::sleep_for(std::chrono::milliseconds(10000));
-             continue;
-         }
 	     std::shared_ptr<meta::vision::MetaObject> context;
 	     input_queue_->Pop(context);
 	     std::shared_ptr<MetaData> message =
 	             std::dynamic_pointer_cast<MetaData>(context);
-	
-
-         std::this_thread::sleep_for(std::chrono::milliseconds (5000));
 
          SendMsg(message);
          // 手动快速释放内存

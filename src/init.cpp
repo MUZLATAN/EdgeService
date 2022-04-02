@@ -143,6 +143,7 @@ void EnvironmentInit::initDeviceGroupInfo() {
 }
 
 void EnvironmentInit::initModelPlugin() {
+    
 }
 
 }  // namespace vision

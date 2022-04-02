@@ -15,7 +15,7 @@ list(
   opencv_highgui
   opencv_imgproc
   opencv_imgcodecs
-  # opencv_videoio
+  opencv_videoio
   opencv_calib3d
   opencv_features2d)
 

@@ -26,7 +26,7 @@ declare -A LIB_VERSIONS=(
 # 地址
 declare -A LIB_URLS=( 
     ["opencv"]="https://gitee.com/mirrors/opencv.git"
-    ["ffmpeg"]="https://ffmpeg.org/releases/ffmpeg-3.4.9.tar.gz"
+    # ["ffmpeg"]="https://ffmpeg.org/releases/ffmpeg-3.4.9.tar.gz"
     # ["rknn"]="https://codeload.github.com/rockchip-linux/rknpu/zip/refs/heads/master"
     ["jsoncpp"]="https://codeload.github.com/open-source-parsers/jsoncpp/tar.gz/refs/tags/1.8.3"
 )
@@ -189,6 +189,31 @@ build_jsoncpp()
     cd ${CUR_PATH}
 }
 
+build_opencv()
+{
+    cd ${SRC_PATH}/opencv
+    if [ -d build ]; then
+        rm -rf build
+    fi
+
+    sed -i '130c #  if defined(PNG_ARM_NEON) && (defined(__ARM_NEON__) || defined(__ARM_NEON)) && \\' 3rdparty/libpng/pngpriv.h
+
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${FFMEPG_LIB_PATH}
+	export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:${FFMPEG_PKG_PATH}
+	export PKG_CONFIG_LIBDIR=$PKG_CONFIG_LIBDIR:${FFMEPG_LIB_PATH}
+
+    mkdir -p build
+    cd build
+    
+
+    cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}/opencv ${COMPILER} -DAR=${AR} -DRANLIB=${RANLIB} -DBUILD_LIST="core,imgproc,highgui,imgcodecs,videoio,video,calib3d,features2d" -DBUILD_SHARED_LIBS=OFF -DBUILD_opencv_apps=OFF -DOPENCV_FORCE_3RDPARTY_BUILD=OFF -DWITH_GTK=OFF -DWITH_IPP=OFF -DBUILD_TESTS=OFF -DWITH_1394=OFF -DBUILD_opencv_apps=OFF -DWITH_ITT=OFF -DBUILD_ZLIB=ON -DWITH_TIFF=OFF -DWITH_JASPER=OFF -DWITH_OPENEXR=OFF -DWITH_WEBP=OFF -DCMAKE_CXX_FLAGS="-DCVAPI_EXPORTS" -DWITH_FFMPEG=ON -DBUILD_JPEG=ON -DBUILD_PNG=ON ..
+    
+    make -j$(nproc)
+    make install
+    cp 3rdparty/lib/* ${INSTALL_DIR}/opencv/lib
+    cd ${CUR_PATH}
+}
+
 
 # 构建: RK
 build_for_x86()
@@ -213,6 +238,7 @@ build_for_x86()
 
     export LD_LIBRARY_PATH=
     build_opencv
+    build_jsoncpp
     echo "================ Build for x86 DONE ================"
 }
 
@@ -286,9 +312,9 @@ build_for_hisi()
 }
 
 setup
-# download_all
-# build_for_x86
-build_for_hisi
+download_all
+build_for_x86
+# build_for_hisi
 
 #rm -rf src
 

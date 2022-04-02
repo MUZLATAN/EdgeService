@@ -31,17 +31,18 @@ void RtspLoaderNode::reopenCamera() {
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "******Trying to reconnect rtsp camera now****"<<std::endl;
+        // std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "******Trying to reconnect rtsp camera now****"<<std::endl;
 
-        bool opened = capture_->open(rtsp_stream_addr_);
+        // bool opened = capture_->open(rtsp_stream_addr_);
 
-        if (!capture_->isOpened()) {
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-            // continue;
-        }
+        // if (!capture_->isOpened()) {
+        //     std::this_thread::sleep_for(std::chrono::seconds(1));
+        //     // continue;
+        // }
 
         cv::Mat frame;
-        capture_->read(frame);
+        // capture_->read(frame);
+        frame = cv::imread("../data/monitor_1646186679777_6.jpg");
         if (frame.empty()) {
             std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << "opened: " << frame.cols << " " << frame.rows<<std::endl;
             continue;
@@ -53,25 +54,28 @@ void RtspLoaderNode::reopenCamera() {
 
 void RtspLoaderNode::run() {
     int cnt = 0;
+    frame->cvImage = cv::imread("../data/monitor_1646186679777_6.jpg");
 
     while (true) {
         if (gt->sys_quit) {
             return;
         }
         frame_id_++;
-        cnt = output_queue_->Size();
-        std::this_thread::sleep_for(std::chrono::seconds(5*cnt));
-        capture_->read(frame->cvImage);
+//        cnt = output_queue_->Size();
+//        std::this_thread::sleep_for(std::chrono::seconds(5*cnt));
+//        capture_->read(frame->cvImage);
+
 
         if (frame->cvImage.empty()) {
             std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  "<<"image empty"<<std::endl;
+            frame->cvImage = cv::imread("../data/monitor_1646186679777_6.jpg");
             reopenCamera();
             continue;
         }
         frame->setCurrentTime();
         frame->camera_sn = gt->camera_sns;
         frame->frame_id = frame_id_;
-        output_queue_->Push(frame, false);
+        output_queue_->Push(frame);
 
     }
     std::cout<<__TIMESTAMP__<<"  ["<< __FILE__<<": " <<__LINE__<<"]  " << node_name_ << " exit .......";

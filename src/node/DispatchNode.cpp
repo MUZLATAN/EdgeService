@@ -22,10 +22,7 @@ void DispatchNode::run() {
         }
 
          std::shared_ptr<meta::vision::MetaObject> message;
-         if (input_queue_->Empty()) {
-             std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-             continue;
-         }
+
 	     input_queue_->Pop(message);
 	     std::shared_ptr<Event> event = std::dynamic_pointer_cast<Event>(message);
          dispatch(event);

@@ -18,7 +18,7 @@ class FlowRpcAsynNode : public Node,
                              DynamicCreator<FlowRpcAsynNode> {
  public:
     explicit FlowRpcAsynNode() : Node(META_NODE_FLOWRPC){
-       loop_times = 5;
+       loop_times = 1;
        count_successfully = 0;
        count_failed = 0;
        success_flag = true;

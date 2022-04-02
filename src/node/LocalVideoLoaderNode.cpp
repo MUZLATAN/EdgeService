@@ -38,7 +38,7 @@ void LocalVideoLoaderNode::run() {
         frame->camera_sn = gt->camera_sns;
         frame->frame_id = frame_id_;
 
-        output_queue_->Push(frame, false);
+        output_queue_->Push(frame);
         is_ready_ = true;
         std::this_thread::sleep_for(std::chrono::milliseconds(5000));
     }

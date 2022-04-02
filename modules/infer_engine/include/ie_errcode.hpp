@@ -1,14 +1,3 @@
-/**
- * *****************************************************************************
- * 				版权所有 (C), 帷幄匠心科技（杭州）有限公司
- * 				Copyright 2022 Whale, All Rights Reserved. 
- * ******************************************************************************
- * 文 件 名: ie_errcode.hpp
- * 创建日期: 2022-02-28
- * 作    者: rongzhaoyang (rongzhaoyang@whale.im)
- * 功能描述: 错误码
- * ******************************************************************************
- */
 #ifndef __IE_ERRCODE_HPP__
 #define __IE_ERRCODE_HPP__
 
@@ -82,7 +71,7 @@ enum IE_ERR_CODE
  * 
  */
 typedef std::map<int, const char*> IE_ERR_CODE_TABLE_TYPE;
-const IE_ERR_CODE_TABLE_TYPE IE_ERR_TABLE  {
+const IE_ERR_CODE_TABLE_TYPE IE_ERR_TABLE {
     { IE_SUCCESS, "success" },
 
     // 前处理
